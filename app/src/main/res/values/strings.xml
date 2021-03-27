@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FinanceApp</string>
+    <string name="password">Password...</string>
+    <string name="email">email...</string>
+    <string name="fullName">Full Name...</string>
+    <string name="backToLogin">Back to Login</string>
+    <string name="signUp">SIGN UP</string>
+    <string name="login">LOGIN</string>
+    <string name="noAccount">Don\'t Have Account? Signup Here</string>
 </resources>
