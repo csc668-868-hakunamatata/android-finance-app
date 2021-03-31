@@ -30,6 +30,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser()!=null){
+            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+            startActivity(intent);
+        }
+
         TextView noAccount = (TextView) findViewById(R.id.noAccount);
         noAccount.setOnClickListener(this);
 
@@ -50,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 
             case R.id.loginButton:
                 initiateLogin();
+                break;
         }
     }
 

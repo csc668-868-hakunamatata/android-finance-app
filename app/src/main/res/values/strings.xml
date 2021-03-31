@@ -6,5 +6,7 @@
     <string name="backToLogin">Back to Login</string>
     <string name="signUp">SIGN UP</string>
     <string name="login">LOGIN</string>
+    <string name="homePage">HOME PAGE</string>
+    <string name="signout">Sign Out</string>
     <string name="noAccount">Don\'t Have Account? Signup Here</string>
 </resources>
