@@ -59,7 +59,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     private void registerUser() {
         final String name = signupName.getText().toString();
-        final String email = signupEmail.getText().toString();
+        final String email = signupEmail.getText().toString().trim();
         String password = signupPassword.getText().toString();
 
         if(name.isEmpty()){
