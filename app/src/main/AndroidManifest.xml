@@ -12,8 +12,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".HomePageActivity"></activity>
         <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".MyCameraActivity" >
+        <activity android:name=".MyCameraActivity" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

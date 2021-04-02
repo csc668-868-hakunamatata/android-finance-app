@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()!=null){
-            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MyCameraActivity.class);
             startActivity(intent);
         }
 
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.noAccount:
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                 LoginActivity.this.startActivity(intent);
                 break;
                 
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MyCameraActivity.class);
                     LoginActivity.this.startActivity(intent);
                 }else{
                     Toast.makeText(LoginActivity.this, "InValid Credentials", Toast.LENGTH_SHORT).show();
