@@ -9,4 +9,6 @@
     <string name="homePage">HOME PAGE</string>
     <string name="signout">Sign Out</string>
     <string name="noAccount">Don\'t Have Account? Signup Here</string>
+    <string name="addEntry">NEW ENTRY</string>
+    <string name="currentBalance">0.0</string>
 </resources>
