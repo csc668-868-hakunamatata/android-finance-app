@@ -55,6 +55,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void fetchTransactionsFromFirebase() {
+        final String clientId = mAuth.getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Transactions/");
 
         ref.addValueEventListener(new ValueEventListener() {
@@ -62,8 +63,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot s : snapshot.getChildren()){
                     Transaction transaction = s.getValue(Transaction.class);
-                    listOfTransactions.add(transaction);
-                    Log.d("HomePageActivity", transaction.toString());
+                    if(clientId.equals(transaction.clientUid)) {
+                        listOfTransactions.add(transaction);
+                        Log.d("HomePageActivity", transaction.toString());
+                    }
                 }
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(HomePageActivity.this, listOfTransactions);
                 recyclerView.setAdapter(adapter);
