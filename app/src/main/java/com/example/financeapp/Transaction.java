@@ -1,9 +1,10 @@
 package com.example.financeapp;
 
 public class Transaction {
+    String clientUid;
     boolean spent;
     boolean earned;
-    double amount;
+    String amount;
     String sourceOfSpendOrEarning;
     String description;
 
@@ -11,7 +12,8 @@ public class Transaction {
         //Empty Constructor
     }
 
-    public Transaction(boolean spent, boolean earned, double amount, String sourceOfSpendOrEarning, String description){
+    public Transaction(String clientUid, boolean spent, boolean earned, String amount, String sourceOfSpendOrEarning, String description){
+        this.clientUid = clientUid;
         this.spent = spent;
         this.earned = earned;
         this.sourceOfSpendOrEarning = sourceOfSpendOrEarning;
