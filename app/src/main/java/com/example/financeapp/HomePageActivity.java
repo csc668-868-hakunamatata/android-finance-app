@@ -37,7 +37,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.newEntryButton:
-                Log.d("HelloThere", "First Check");
+                startActivity(new Intent(HomePageActivity.this, NewTransactionActivity.class));
                 break;
         }
     }
