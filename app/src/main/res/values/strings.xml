@@ -22,4 +22,5 @@
     <string name="optionalDescription">Enter Description Here</string>
     <string name="currentBalanceText">CURRENT BALANCE</string>
     <string name="dollarSign">$</string>
+    <string name="earnedOrSpent">EarnedOrSpent</string>
 </resources>

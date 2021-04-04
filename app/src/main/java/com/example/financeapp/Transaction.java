@@ -1,5 +1,7 @@
 package com.example.financeapp;
 
+import androidx.annotation.NonNull;
+
 public class Transaction {
     public String clientUid;
     public String earnedOrSpent;
@@ -17,5 +19,16 @@ public class Transaction {
         this.sourceOfSpendOrEarning = sourceOfSpendOrEarning;
         this.amount = amount;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "clientUid='" + clientUid + '\'' +
+                ", earnedOrSpent='" + earnedOrSpent + '\'' +
+                ", amount='" + amount + '\'' +
+                ", sourceOfSpendOrEarning='" + sourceOfSpendOrEarning + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

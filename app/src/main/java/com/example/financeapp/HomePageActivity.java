@@ -2,6 +2,9 @@ package com.example.financeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,36 +20,71 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private TextView currentBalance;
     private Button newEntry;
+    RecyclerView recyclerView;
+    private List<Transaction> listOfTransactions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        recyclerView = findViewById(R.id.recyclerView);
         newEntry = (Button) findViewById(R.id.newEntryButton);
         currentBalance = (TextView) findViewById(R.id.currentBalance);
         mAuth = FirebaseAuth.getInstance();
+
+        fetchBalanceFromFirebase();
+        listOfTransactions = new ArrayList<>();
+        fetchTransactionsFromFirebase();
+
         newEntry.setOnClickListener(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(mAuth.getCurrentUser()!=null) {
-            fetchBalanceFromFirebase();
-        }
+    private void fetchTransactionsFromFirebase() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Transactions/");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot s : snapshot.getChildren()){
+                    Transaction transaction = s.getValue(Transaction.class);
+                    listOfTransactions.add(transaction);
+                    Log.d("HomePageActivity", transaction.toString());
+                }
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(HomePageActivity.this, listOfTransactions);
+                recyclerView.setAdapter(adapter);
+                recyclerView.addItemDecoration(new DividerItemDecoration(HomePageActivity.this, LinearLayoutManager.VERTICAL));
+                recyclerView.setLayoutManager(new LinearLayoutManager(HomePageActivity.this));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if(mAuth.getCurrentUser()!=null) {
+//            fetchBalanceFromFirebase();
+//        }
+//    }
 
     private void fetchBalanceFromFirebase() {
         try {
