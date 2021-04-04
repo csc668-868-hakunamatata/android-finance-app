@@ -11,8 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -20,17 +25,47 @@ import java.util.List;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private TextView currentBalance;
+    private Button newEntry;
 
-    Button newEntry;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
         newEntry = (Button) findViewById(R.id.newEntryButton);
-        newEntry.setOnClickListener(this);
+        currentBalance = (TextView) findViewById(R.id.currentBalance);
         mAuth = FirebaseAuth.getInstance();
+        newEntry.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mAuth.getCurrentUser()!=null) {
+            fetchBalanceFromFirebase();
+        }
+    }
+
+    private void fetchBalanceFromFirebase() {
+        try {
+            String clientId = mAuth.getCurrentUser().getUid();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
+            ref.child("currentBalance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        currentBalance.setText(String.valueOf(task.getResult().getValue().toString()));
+                        Log.d("TheCurrentBalance", task.getResult().getValue().toString());
+                    } else {
+                        Log.d("HomePageActivity", "Unsuccessful CurrentBalance update");
+                    }
+                }
+            });
+        }catch(Exception e){
+            Log.d("HomePageActivity", e.toString());
+        }
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -84,10 +85,11 @@ public class NewTransactionActivity extends AppCompatActivity implements View.On
             earnedOrSpent = "Earned";
         }
 
-        storeToDatabase(clientId, earnedOrSpent, amountGiven, sourceGiven, descriptionGiven);
+        storeTransactionToDatabase(clientId, earnedOrSpent, amountGiven, sourceGiven, descriptionGiven);
+
     }
 
-    private void storeToDatabase(String clientId, String earnedOrSpent, String amountGiven, String sourceGiven, String descriptionGiven) {
+    private void storeTransactionToDatabase(final String clientId, final String earnedOrSpent, final String amountGiven, String sourceGiven, String descriptionGiven) {
         Transaction transaction = new Transaction(clientId, earnedOrSpent, amountGiven, sourceGiven, descriptionGiven);
         try {
             String transactionId = UUID.randomUUID().toString();
@@ -96,6 +98,7 @@ public class NewTransactionActivity extends AppCompatActivity implements View.On
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        updateCurrentBalance(earnedOrSpent, clientId, amountGiven);
                         Log.d("NewTransactionActivity", "Successfully added Transaction to Database");
                     } else {
                         Log.d("NewTransactionActivity", "Failed to add Transaction to Database");
@@ -105,5 +108,45 @@ public class NewTransactionActivity extends AppCompatActivity implements View.On
         }catch(Exception e){
             Log.d("NewTransactionActivity", e.toString());
         }
+    }
+
+    private void updateCurrentBalance(final String earnedOrSpent, String clientId, final String amountGiven) {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
+
+        try{
+            final String[] currentValue = new String[1];
+            ref.child("currentBalance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        currentValue[0] = String.valueOf(task.getResult().getValue());
+                        Double newValue = 0.0;
+                        if(earnedOrSpent.equalsIgnoreCase("spent")){
+                            newValue = Double.parseDouble(currentValue[0]) - Double.parseDouble(amountGiven);
+                        }else{
+                            newValue = Double.parseDouble(currentValue[0]) + Double.parseDouble(amountGiven);
+                        }
+
+                        updateBalanceInDatabase(ref, newValue);
+                        Log.d("Firebase", currentValue[0]);
+                    }
+                }
+            });
+        }catch(Exception e){
+            Log.d("NewTransactionActivity", e.toString());
+        }
+
+    }
+
+    private void updateBalanceInDatabase(DatabaseReference ref, final double newValue){
+        ref.child("currentBalance").setValue(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d("Firebase", "Added New Value "+ newValue + " ");
+                    startActivity(new Intent(NewTransactionActivity.this, HomePageActivity.class));
+                }
+            }
+        });
     }
 }
