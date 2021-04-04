@@ -1,21 +1,19 @@
 package com.example.financeapp;
 
 public class Transaction {
-    String clientUid;
-    boolean spent;
-    boolean earned;
-    String amount;
-    String sourceOfSpendOrEarning;
-    String description;
+    public String clientUid;
+    public String earnedOrSpent;
+    public String amount;
+    public String sourceOfSpendOrEarning;
+    public String description;
 
     public Transaction(){
         //Empty Constructor
     }
 
-    public Transaction(String clientUid, boolean spent, boolean earned, String amount, String sourceOfSpendOrEarning, String description){
+    public Transaction(String clientUid, String earnedOrSpent, String amount, String sourceOfSpendOrEarning, String description){
         this.clientUid = clientUid;
-        this.spent = spent;
-        this.earned = earned;
+        this.earnedOrSpent = earnedOrSpent;
         this.sourceOfSpendOrEarning = sourceOfSpendOrEarning;
         this.amount = amount;
         this.description = description;
