@@ -2,11 +2,17 @@ package com.example.financeapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,6 +42,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private Button newEntry;
     RecyclerView recyclerView;
     private List<Transaction> listOfTransactions;
+    private static final int budgetNotificationID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mAuth = FirebaseAuth.getInstance();
 
         fetchBalanceFromFirebase();
+        // Notification
+        createNotificationChannel();
+
         listOfTransactions = new ArrayList<>();
         fetchTransactionsFromFirebase();
 
@@ -98,6 +108,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         currentBalance.setText(String.valueOf(task.getResult().getValue().toString()));
+                        if ((double) task.getResult().getValue() <= 0.0) {
+                            createBudgetAlert("You have exceeded the Budget Limit!");
+                        }
                         Log.d("TheCurrentBalance", task.getResult().getValue().toString());
                     } else {
                         Log.d("HomePageActivity", "Unsuccessful CurrentBalance update");
@@ -139,6 +152,33 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    private void createBudgetAlert(String messageBody) {
+        Intent intent = new Intent(this, HomePageActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
+                "BudgetAlert")
+                .setSmallIcon(R.drawable.ic_alert)
+                .setContentTitle("Budget Alert!")
+                .setContentText(messageBody)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        // return builder;
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(budgetNotificationID, builder.build());
+    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Budget Alert";
+            String description = "Budget Alert description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("BudgetAlert", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 }
