@@ -9,14 +9,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".NewTransactionActivity" />
-        <activity android:name=".HomePageActivity" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".DrawerActivity"
+        <activity
+            android:name=".HomePageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DrawerActivity"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- TODO: Need to change this .MainActivity -->
 
-        <!--    TODO: Need to change this .MainActivity-->
-        <activity android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -46,7 +46,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nav_activity_home_page);
+        setContentView(R.layout.activity_home_page);
 
         //enter values
         recyclerView = findViewById(R.id.recyclerView);
