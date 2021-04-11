@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch(view.getId()){
             case R.id.noAccount:
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                LoginActivity.this.startActivity(intent);
+                startActivity(intent);
                 break;
                 
             case R.id.loginButton:

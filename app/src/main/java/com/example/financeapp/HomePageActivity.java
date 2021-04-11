@@ -1,11 +1,5 @@
 package com.example.financeapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +9,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,21 +32,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private TextView currentBalance;
     private Button newEntry;
     RecyclerView recyclerView;
     private List<Transaction> listOfTransactions;
+//    private DrawerLayout drawer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.nav_activity_home_page);
 
+        //enter values
         recyclerView = findViewById(R.id.recyclerView);
         newEntry = (Button) findViewById(R.id.newEntryButton);
         currentBalance = (TextView) findViewById(R.id.currentBalance);
@@ -61,9 +68,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot s : snapshot.getChildren()){
+                for (DataSnapshot s : snapshot.getChildren()) {
                     Transaction transaction = s.getValue(Transaction.class);
-                    if(clientId.equals(transaction.clientUid)) {
+                    if (clientId.equals(transaction.clientUid)) {
                         listOfTransactions.add(transaction);
                         Log.d("HomePageActivity", transaction.toString());
                     }
@@ -97,21 +104,23 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
-                        currentBalance.setText(String.valueOf(task.getResult().getValue().toString()));
-                        Log.d("TheCurrentBalance", task.getResult().getValue().toString());
+                        if (task.getResult().getValue() != null) {
+                            currentBalance.setText(String.valueOf(task.getResult().getValue().toString()));
+                            Log.d("TheCurrentBalance", task.getResult().getValue().toString());
+                        }
                     } else {
                         Log.d("HomePageActivity", "Unsuccessful CurrentBalance update");
                     }
                 }
             });
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("HomePageActivity", e.toString());
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.newEntryButton:
                 startActivity(new Intent(HomePageActivity.this, NewTransactionActivity.class));
                 break;
@@ -133,7 +142,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.signoutButton:
                 signOut();
                 return true;

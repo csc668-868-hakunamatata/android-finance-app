@@ -51,7 +51,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         switch(view.getId()){
             case R.id.backToLogin:
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                SignupActivity.this.startActivity(intent);
+                startActivity(intent);
                 break;
             case R.id.signupButton:
                 registerUser();
@@ -82,7 +82,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        if(password.isEmpty() || password.length()<=5){
+        if(password.isEmpty() || password.length()<6){
             signupPassword.setError("Six or more characters required");
             signupPassword.requestFocus();
             return;
