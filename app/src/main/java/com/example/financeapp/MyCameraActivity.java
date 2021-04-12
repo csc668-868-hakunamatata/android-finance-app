@@ -64,12 +64,10 @@ public class MyCameraActivity extends Activity
     private FirebaseFunctions mFunctions;
 
 
-
-
     //OCR testing
     String url = "https://api.ocr.space/parse/image";
 
-    private String mApiKey = "f3cae3715488957";
+    private String mApiKey = "Hello world";
     private String mImage;
 
 
