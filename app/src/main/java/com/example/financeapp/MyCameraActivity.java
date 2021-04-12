@@ -13,6 +13,7 @@ import android.hardware.camera2.CameraManager;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -43,7 +44,17 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Iterator;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MyCameraActivity extends Activity
 {
@@ -51,6 +62,15 @@ public class MyCameraActivity extends Activity
     private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
     private FirebaseFunctions mFunctions;
+
+
+
+
+    //OCR testing
+    String url = "https://api.ocr.space/parse/image";
+
+    private String mApiKey = "f3cae3715488957";
+    private String mImage;
 
 
     @Override
@@ -115,43 +135,47 @@ public class MyCameraActivity extends Activity
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
-            String base64encoded = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+            final String base64encoded = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
 
+
+            //***************************************************
+            //This is the firebase function code
             //Create jason request to cloud vision
-            JsonObject request = new JsonObject();
-            //Add image to request
-            JsonObject image = new JsonObject();
-            image.add("content", new JsonPrimitive(base64encoded));
-            request.add("image", image);
-            //Add features to the request
-            JsonObject feature = new JsonObject();
-            feature.add("type", new JsonPrimitive("DOCUMENT_TEXT_DETECTION")); //"DOCUMENT_TEXT_DETECTION"
-            JsonArray features = new JsonArray();
-            features.add(feature);
-            request.add("features", features);
+//            JsonObject request = new JsonObject();
+//            //Add image to request
+//            JsonObject image = new JsonObject();
+//            image.add("content", new JsonPrimitive(base64encoded));
+//            request.add("image", image);
+//            //Add features to the request
+//            JsonObject feature = new JsonObject();
+//            feature.add("type", new JsonPrimitive("DOCUMENT_TEXT_DETECTION")); //"DOCUMENT_TEXT_DETECTION"
+//            JsonArray features = new JsonArray();
+//            features.add(feature);
+//            request.add("features", features);
+//
+//            //invoke the function
+//            System.out.println("Here: Call to annotateImage");
+//            annotateImage(request.toString())
+//                    .addOnCompleteListener(new OnCompleteListener<JsonElement>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<JsonElement> task) {
+//
+//                            if(!task.isSuccessful()){
+//                                //task failed with an exception
+//                                System.out.println("*********************ERROR****************************");
+//                                System.out.println(task.getException().toString());
+//                            } else {
+//                                //Task completed successfully
+//
+//                                JsonObject annotation = task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("fullTextAnnotation").getAsJsonObject();
+//                                System.out.format("%nComplete annotation: %n");
+//                                System.out.format("%s%n", annotation.get("text").getAsString());
+//                            }
+//                        }
+//                    });
 
-            //invoke the function
-            System.out.println("Here: Call to annotateImage");
-            annotateImage(request.toString())
-                    .addOnCompleteListener(new OnCompleteListener<JsonElement>() {
-                        @Override
-                        public void onComplete(@NonNull Task<JsonElement> task) {
 
-                            if(!task.isSuccessful()){
-                                //task failed with an exception
-                                System.out.println("*********************ERROR****************************");
-                                System.out.println(task.getException().toString());
-                            } else {
-                                //Task completed successfully
-
-                                JsonObject annotation = task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("fullTextAnnotation").getAsJsonObject();
-                                System.out.format("%nComplete annotation: %n");
-                                System.out.format("%s%n", annotation.get("text").getAsString());
-                            }
-                        }
-                    });
-
-
+            //Code for firebase sdk kit
 //            InputImage image = InputImage.fromBitmap(photo, rotationDegree);
 //            TextRecognizer recognizer = TextRecognition.getClient();
 //
@@ -192,6 +216,7 @@ public class MyCameraActivity extends Activity
         }
     }
 
+
     private Task<JsonElement> annotateImage(String requestJson) {
         System.out.println("In annotateImage method");
         return mFunctions
@@ -203,6 +228,67 @@ public class MyCameraActivity extends Activity
                         return JsonParser.parseString(new Gson().toJson(task.getResult().getData()));
                     }
                 });
+    }
+
+    //Free OCR API testing
+    private String sendPost(String apiKey, String image) throws Exception {
+        URL obj = new URL(url);
+        HttpsURLConnection connection = (HttpsURLConnection) obj.openConnection();
+
+        //add request header
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+        connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+        JSONObject postDataParams = new JSONObject();
+
+        postDataParams.put("apiKey", apiKey);
+        //postDataParams.put("isOverlayRequired", isOverlayRequired);
+        postDataParams.put("base64Image", image);
+        //postDataParams.put("language", language);
+
+        //send post request
+        connection.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+        wr.writeBytes(getPostDataString(postDataParams));
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null){
+            response.append(inputLine);
+        }
+        in.close();
+
+        //return result
+        return String.valueOf(response);
+    }
+
+    public String getPostDataString(JSONObject params) throws Exception {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        Iterator<String> itr = params.keys();
+
+        while(itr.hasNext()) {
+            String key = itr.next();
+            Object value = params.get(key);
+
+            if(first){
+                first = false;
+            }else {
+                result.append("&");
+            }
+
+            result.append(URLEncoder.encode(key, "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
+        }
+        System.out.println("getPostDataString: " + result.toString());
+        return result.toString();
     }
 
 }
