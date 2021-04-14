@@ -5,19 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Base64;
-import android.util.Log;
-import android.util.SparseIntArray;
-import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,22 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.text.Text;
-import com.google.mlkit.vision.text.TextRecognition;
-import com.google.mlkit.vision.text.TextRecognizer;
 
 import org.json.JSONObject;
 
@@ -53,6 +33,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -67,9 +50,16 @@ public class MyCameraActivity extends Activity
     //OCR testing
     String url = "https://api.ocr.space/parse/image";
 
-    private String mApiKey = "Hello world";
+    private String mApiKey = "Hello World";
     private String mImage;
+    Executor executor = new Executor() {
+        @Override
+        public void execute(Runnable runnable) {
+            new Thread(runnable).run();
+        }
+    };
 
+    //ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,6 +124,16 @@ public class MyCameraActivity extends Activity
             photo.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
             final String base64encoded = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+
+            //OCR
+            System.out.println("HERE I AM TRYING OCR");
+            makeSendPost(base64encoded);
+//            try{
+//                String response = sendPost(mApiKey, base64encoded);
+//                System.out.println("Response from OCR: " + response);
+//            }catch (Exception e){
+//                System.out.println(e.toString());
+//            }
 
 
             //***************************************************
@@ -214,7 +214,7 @@ public class MyCameraActivity extends Activity
         }
     }
 
-
+//Firebase function annotate image
     private Task<JsonElement> annotateImage(String requestJson) {
         System.out.println("In annotateImage method");
         return mFunctions
@@ -226,6 +226,22 @@ public class MyCameraActivity extends Activity
                         return JsonParser.parseString(new Gson().toJson(task.getResult().getData()));
                     }
                 });
+    }
+
+    public void makeSendPost(final String base64) {
+        System.out.println("Inside makeSendPost");
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String response = sendPost(mApiKey, base64);
+                    System.out.println("Response from OCR: " + response);
+                }catch (Exception e){
+                    System.out.println("makeSendPost: Exception");
+                    System.out.println(e.toString());
+                }
+            }
+        });
     }
 
     //Free OCR API testing
@@ -265,6 +281,7 @@ public class MyCameraActivity extends Activity
         return String.valueOf(response);
     }
 
+    //OCR get text
     public String getPostDataString(JSONObject params) throws Exception {
         StringBuilder result = new StringBuilder();
         boolean first = true;
@@ -290,3 +307,14 @@ public class MyCameraActivity extends Activity
     }
 
 }
+
+//Result.java
+//public abstract class Result<T> {
+//    private Result() {}
+//
+//    public static final class Success<T> extends Result<T> {
+//        public T data;
+//
+//
+//    }
+//}
