@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.financeapp.DrawerActivity"
+    tools:context=".activities.NewTransactionActivity"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -27,7 +27,15 @@
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+            <include
+                layout="@layout/activity_new_transaction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
 
     </LinearLayout>
 

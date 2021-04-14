@@ -8,17 +8,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewTransactionActivity" />
-        <activity
-            android:name=".HomePageActivity"
+        <activity android:name=".activities.NewTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DrawerActivity"
-            android:theme="@style/AppTheme.NoActionBar" /> <!-- TODO: Need to change this .MainActivity -->
+            android:name=".activities.HomePageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
 
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.SignupActivity" />
+        <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,8 +1,9 @@
-package com.example.financeapp;
+package com.example.financeapp.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
+import com.example.financeapp.R;
+import com.example.financeapp.utilities.Transaction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -21,8 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.UUID;
 
-public class NewTransactionActivity extends AppCompatActivity implements View.OnClickListener{
-
+public class NewTransactionActivity extends HomePageActivity {
     private EditText amount, source, description;
     private Button submit;
     private FirebaseAuth mAuth;
@@ -31,8 +33,20 @@ public class NewTransactionActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_transaction);
+        setContentView(R.layout.activity_nav_new_transaction);
+        //navigation
+        DrawerLayout drawerLayout;
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) this);
+        //
         submit = (Button) findViewById(R.id.submitButton);
         amount = (EditText) findViewById(R.id.amountText);
         source = (EditText) findViewById(R.id.sourceText);

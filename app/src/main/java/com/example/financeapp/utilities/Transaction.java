@@ -1,6 +1,4 @@
-package com.example.financeapp;
-
-import androidx.annotation.NonNull;
+package com.example.financeapp.utilities;
 
 public class Transaction {
     public String clientUid;
@@ -8,6 +6,7 @@ public class Transaction {
     public String amount;
     public String sourceOfSpendOrEarning;
     public String description;
+    //public List<Transaction> transactionList;
 
     public Transaction(){
         //Empty Constructor
@@ -19,6 +18,8 @@ public class Transaction {
         this.sourceOfSpendOrEarning = sourceOfSpendOrEarning;
         this.amount = amount;
         this.description = description;
+        //this.transactionList = new ArrayList<>();
+
     }
 
     @Override
@@ -31,4 +32,22 @@ public class Transaction {
                 ", description='" + description + '\'' +
                 '}';
     }
+    //    public void setTransactions(List<Transaction> transactions){
+//        this.transactionList = transactions;
+//    }
+//
+//    public void addTransaction(Transaction transaction){
+//        if(transaction.spent){
+//            double newAmount = Double.parseDouble(currentBalance) - Double.parseDouble(transaction.amount);
+//            currentBalance = String.valueOf(newAmount);
+//        }else if(transaction.earned){
+//            double newAmount = Double.parseDouble(currentBalance) - Double.parseDouble(transaction.amount);
+//            currentBalance = String.valueOf(newAmount);
+//        }
+//        this.transactionList.add(transaction);
+//    }
+
+    //    public List<Transaction> getTransactionList() {
+//        return transactionList;
+//    }
 }
