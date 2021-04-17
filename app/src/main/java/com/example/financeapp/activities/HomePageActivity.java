@@ -1,6 +1,7 @@
 package com.example.financeapp.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -124,14 +125,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             String clientId = mAuth.getCurrentUser().getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
             ref.child("currentBalance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         currentBalance.setText(String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
                         if (task.getResult() != null){
-                           if (task.getResult().getValue() != null && (long) task.getResult().getValue() <=0.0){
-                               createBudgetAlert("You have exceeded the Budget Limit!");
-                           };
+//                           if (task.getResult().getValue() != null && (long) task.getResult().getValue() <=0.0){
+//                               createBudgetAlert("You have exceeded the Budget Limit!");
+//                           };
                         }
                         Log.d("TheCurrentBalance", Objects.requireNonNull(task.getResult().getValue()).toString());
                     } else {

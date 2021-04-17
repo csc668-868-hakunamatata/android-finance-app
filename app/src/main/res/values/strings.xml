@@ -42,5 +42,8 @@
     <string name="profile">Profile</string>
     <string name="history">History</string>
     <string name="home">Home</string>
+    <string name="initPrompt">Would you like to set up your budget limit and alert?</string>
+    <string name="budgetLimit">Budget Limit</string>
+    <string name="budgetAlert">Budget Alert (% of limit reached)</string>
 
 </resources>
