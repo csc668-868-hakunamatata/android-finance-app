@@ -50,14 +50,9 @@ public class MyCameraActivity extends Activity
     //OCR testing
     String url = "https://api.ocr.space/parse/image";
 
-    private String mApiKey = "Hello World";
+    private String mApiKey = "helloworld";
     private String mImage;
-    Executor executor = new Executor() {
-        @Override
-        public void execute(Runnable runnable) {
-            new Thread(runnable).run();
-        }
-    };
+
 
     //ExecutorService executorService = Executors.newFixedThreadPool(4);
 
@@ -230,7 +225,8 @@ public class MyCameraActivity extends Activity
 
     public void makeSendPost(final String base64) {
         System.out.println("Inside makeSendPost");
-        executor.execute(new Runnable() {
+
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
@@ -242,6 +238,28 @@ public class MyCameraActivity extends Activity
                 }
             }
         });
+
+        thread.start();
+
+//        Executor executor = new Executor() {
+//            @Override
+//            public void execute(Runnable runnable) {
+//                new Thread(runnable).run();
+//            }
+//        };
+//
+//        executor.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                try{
+//                    String response = sendPost(mApiKey, base64);
+//                    System.out.println("Response from OCR: " + response);
+//                }catch (Exception e){
+//                    System.out.println("makeSendPost: Exception");
+//                    System.out.println(e.toString());
+//                }
+//            }
+//        });
     }
 
     //Free OCR API testing
@@ -258,7 +276,9 @@ public class MyCameraActivity extends Activity
 
         postDataParams.put("apiKey", apiKey);
         //postDataParams.put("isOverlayRequired", isOverlayRequired);
-        postDataParams.put("base64Image", image);
+        postDataParams.put("base64image", "data:image/bmp;base64," + image);
+        //postDataParams.put("url", "https://en.wikipedia.org/wiki/Receipt#/media/File:ReceiptSwiss.jpg");
+        postDataParams.put("filetype", "bmp");
         //postDataParams.put("language", language);
 
         //send post request
@@ -278,6 +298,7 @@ public class MyCameraActivity extends Activity
         in.close();
 
         //return result
+
         return String.valueOf(response);
     }
 
