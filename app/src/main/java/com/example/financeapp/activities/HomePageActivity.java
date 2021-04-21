@@ -234,8 +234,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 //                startActivity(intent);
                 break;
             case R.id.nav_profile:
-//                Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
-//                startActivity(intent);
+                intent = new Intent(HomePageActivity.this, ProfileActivity.class);
+                startActivity(intent);
                 break;
 
         }

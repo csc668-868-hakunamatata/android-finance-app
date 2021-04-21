@@ -8,6 +8,7 @@ public class BudgetAlert {
     private String frequency;
     private float budgetLimit;
     private float budgetAlertPercent;
+    private boolean alertOn = false;
 
     public BudgetAlert(){}
 
@@ -16,6 +17,7 @@ public class BudgetAlert {
         this.frequency = frequency;
         this.budgetLimit = budgetLimit;
         this.budgetAlertPercent = budgetAlertPercent;
+        this.alertOn = true;
     }
 
     @Override
@@ -26,5 +28,8 @@ public class BudgetAlert {
                 ", budgetLimit='" + budgetLimit + '\'' +
                 ", budgetAlertPercent'" + budgetAlertPercent + '\'' +
                 '}';
+    }
+    public void setAlertOn(boolean onOrOff) {
+        this.alertOn = onOrOff;
     }
 }

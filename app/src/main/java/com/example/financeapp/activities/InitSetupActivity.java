@@ -41,8 +41,11 @@ public class InitSetupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
     public void cancelBudgetLimit(View view){
-
+        Intent intent = new Intent(InitSetupActivity.this, HomePageActivity.class);
+        InitSetupActivity.this.startActivity(intent);
+        finish();
     }
+
     public void submitBudgetLimit(View view) {
         String budgetLimitInput = budgetLimit.getText().toString();
         float budgetLimitNum = 0.0f;
