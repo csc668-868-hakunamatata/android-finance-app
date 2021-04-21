@@ -2,11 +2,18 @@ package com.example.financeapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -15,23 +22,38 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -50,11 +72,12 @@ public class MyCameraActivity extends Activity
     //OCR testing
     String url = "https://api.ocr.space/parse/image";
 
-    private String mApiKey = "helloworld";
+    private String mApiKey = "f3cae3715488957";
     private String mImage;
 
 
-    //ExecutorService executorService = Executors.newFixedThreadPool(4);
+    String currentPhotoPath;
+    Uri photoUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,11 +99,39 @@ public class MyCameraActivity extends Activity
                 }
                 else
                 {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                    //Original code
+//                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+                    //Saving the uri and the full image
+                    dispatchTakePictureIntent();
                 }
             }
         });
+    }
+
+    //for taking and saving a picture
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //Ensure that theres a camera activity to handle the intent
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            //Create file where photo should go
+            File photoFile = null;
+            try{
+                photoFile = createImageFile();
+            }catch (IOException e){
+                //Error occured while creating the file
+                System.out.println("Exception in dispatch: " + e.toString());
+            }
+            //Continue only if the file was created successfully
+            if(photoFile != null){
+                photoUri = FileProvider.getUriForFile(
+                        this, "com.example.android.fileprovider", photoFile
+                );
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+            }
+        }
     }
 
     @Override
@@ -92,8 +143,9 @@ public class MyCameraActivity extends Activity
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+//                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                //dispatchTakePictureIntent();
             }
             else
             {
@@ -104,25 +156,42 @@ public class MyCameraActivity extends Activity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        int rotationDegree = 0;
+        int rotationDegree = 90;
 
 
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
         {
 
             //Photo right here
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo); //displays photo as bitmap into imageView
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//            imageView.setImageBitmap(photo); //displays photo as bitmap into imageView
+
+            //Get and set image from URI
+            Bitmap bitmapImage = null;
+            try{
+                bitmapImage = MediaStore.Images.Media.getBitmap(
+                        getContentResolver(), photoUri);
+            }catch (Exception e){
+                System.out.println("Exception in result: " + e.toString());
+            }
+
+            if(bitmapImage != null){
+                System.out.println("NOT NULL!");
+                imageView.setImageBitmap(bitmapImage);
+            }
+
+
 
             //Cloud API test
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] imageBytes = byteArrayOutputStream.toByteArray();
-            final String base64encoded = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
+//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//            photo.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+//            byte[] imageBytes = byteArrayOutputStream.toByteArray();
+//            final String base64encoded = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
 
             //OCR
-            System.out.println("HERE I AM TRYING OCR");
-            makeSendPost(base64encoded);
+//            System.out.println("HERE I AM TRYING OCR");
+//            makeSendPost(base64encoded);
+
 //            try{
 //                String response = sendPost(mApiKey, base64encoded);
 //                System.out.println("Response from OCR: " + response);
@@ -169,44 +238,65 @@ public class MyCameraActivity extends Activity
 
 
             //Code for firebase sdk kit
-//            InputImage image = InputImage.fromBitmap(photo, rotationDegree);
-//            TextRecognizer recognizer = TextRecognition.getClient();
-//
-//            //Process text captured from image
-//            Task<Text> result = recognizer.process(image)
-//                    .addOnSuccessListener(new OnSuccessListener<Text>() {
-//                        @Override
-//                        public void onSuccess(Text text) {
-//                            String resultText = text.getText();
-//                            System.out.println("Here");
-//                            System.out.println(resultText);
-//                            for(Text.TextBlock block : text.getTextBlocks()) {
-//                                String blockText = block.getText();
-//                                Point[] blockCornerPoints = block.getCornerPoints();
-//                                Rect blockFrame = block.getBoundingBox();
-//                                for (Text.Line line : block.getLines()) {
-//                                    String lineText = line.getText();
-//                                    Point[] lineCornerPoints = line.getCornerPoints();
-//                                    Rect lineFrame = line.getBoundingBox();
-//                                    System.out.println("Line: " + line.toString());
-//                                    for (Text.Element element : line.getElements()) {
-//                                        String elementText = element.getText();
-//                                        Point[] elementCornerPoints = element.getCornerPoints();
-//                                        Rect elementFrame = element.getBoundingBox();
-//                                    }
-//                                }
-//                                System.out.println("Block text: " + blockText);
-//                            }
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//
-//                        }
-//                    });
+            //InputImage image = InputImage.fromBitmap(photo, rotationDegree); //from original photo
+
+            InputImage image = InputImage.fromBitmap(bitmapImage, rotationDegree);
+            TextRecognizer recognizer = TextRecognition.getClient();
+
+            //Process text captured from image
+            Task<Text> result = recognizer.process(image)
+                    .addOnSuccessListener(new OnSuccessListener<Text>() {
+                        @Override
+                        public void onSuccess(Text text) {
+                            String resultText = text.getText();
+                            System.out.println("Here");
+                            System.out.println(resultText);
+                            for(Text.TextBlock block : text.getTextBlocks()) {
+                                String blockText = block.getText();
+                                Point[] blockCornerPoints = block.getCornerPoints();
+                                Rect blockFrame = block.getBoundingBox();
+                                for (Text.Line line : block.getLines()) {
+                                    String lineText = line.getText();
+                                    Point[] lineCornerPoints = line.getCornerPoints();
+                                    Rect lineFrame = line.getBoundingBox();
+
+                                    for (Text.Element element : line.getElements()) {
+                                        String elementText = element.getText();
+                                        Point[] elementCornerPoints = element.getCornerPoints();
+                                        Rect elementFrame = element.getBoundingBox();
+                                        System.out.println("Element Text: " + elementText);
+                                    }
+                                    System.out.println("Line Text: " + lineText);
+                                }
+                                System.out.println("Block text: " + blockText);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
 
         }
+    }
+
+    //Create image file
+    private File createImageFile() throws IOException {
+        //Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        //save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
 //Firebase function annotate image
@@ -241,25 +331,6 @@ public class MyCameraActivity extends Activity
 
         thread.start();
 
-//        Executor executor = new Executor() {
-//            @Override
-//            public void execute(Runnable runnable) {
-//                new Thread(runnable).run();
-//            }
-//        };
-//
-//        executor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                try{
-//                    String response = sendPost(mApiKey, base64);
-//                    System.out.println("Response from OCR: " + response);
-//                }catch (Exception e){
-//                    System.out.println("makeSendPost: Exception");
-//                    System.out.println(e.toString());
-//                }
-//            }
-//        });
     }
 
     //Free OCR API testing
@@ -277,8 +348,11 @@ public class MyCameraActivity extends Activity
         postDataParams.put("apiKey", apiKey);
         //postDataParams.put("isOverlayRequired", isOverlayRequired);
         postDataParams.put("base64image", "data:image/bmp;base64," + image);
-        //postDataParams.put("url", "https://en.wikipedia.org/wiki/Receipt#/media/File:ReceiptSwiss.jpg");
         postDataParams.put("filetype", "bmp");
+        postDataParams.put("scale", "true");
+        postDataParams.put("isTable", "true");
+        //postDataParams.put("isCreateSearchablePdf", "true");
+        //postDataParams.put("OCREngine", "2");
         //postDataParams.put("language", language);
 
         //send post request
@@ -329,13 +403,3 @@ public class MyCameraActivity extends Activity
 
 }
 
-//Result.java
-//public abstract class Result<T> {
-//    private Result() {}
-//
-//    public static final class Success<T> extends Result<T> {
-//        public T data;
-//
-//
-//    }
-//}
