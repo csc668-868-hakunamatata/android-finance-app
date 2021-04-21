@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText userEmail, userPassword;
+    private TextView forgotPassword;
     private Button loginButton;
     private FirebaseAuth mAuth;
 
@@ -29,6 +30,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()!=null){
@@ -67,6 +71,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 
             case R.id.loginButton:
                 initiateLogin();
+                break;
+
+            case R.id.forgotPassword:
+                Intent newIntent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(newIntent);
                 break;
         }
     }

@@ -48,3 +48,6 @@ dependencies {
 
 }
 
+task prepareKotlinBuildScriptModel {
+
+}
