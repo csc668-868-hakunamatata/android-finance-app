@@ -146,8 +146,8 @@ public class HistoryActivity extends HomePageActivity {
 
         expensePieChart.setData(expenseData);
         expensePieChart.invalidate();
-        depositPieChart.setData(depositData);
-        depositPieChart.invalidate();
+//        depositPieChart.setData(depositData);
+//        depositPieChart.invalidate();
     }
 
     private void setupPieChart(){
