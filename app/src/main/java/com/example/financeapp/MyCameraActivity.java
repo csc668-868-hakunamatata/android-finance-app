@@ -264,9 +264,9 @@ public class MyCameraActivity extends Activity
                                         String elementText = element.getText();
                                         Point[] elementCornerPoints = element.getCornerPoints();
                                         Rect elementFrame = element.getBoundingBox();
-                                        System.out.println("Element Text: " + elementText);
+                                        //System.out.println("Element Text: " + elementText);
                                     }
-                                    System.out.println("Line Text: " + lineText);
+                                    //System.out.println("Line Text: " + lineText);
                                 }
                                 System.out.println("Block text: " + blockText);
                             }
