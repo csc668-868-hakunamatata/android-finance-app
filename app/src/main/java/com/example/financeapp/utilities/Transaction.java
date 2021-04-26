@@ -1,4 +1,8 @@
 package com.example.financeapp.utilities;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Transaction {
     public String clientUid;
@@ -6,6 +10,8 @@ public class Transaction {
     public String amount;
     public String sourceOfSpendOrEarning;
     public String description;
+    public LocalDate localDate;
+
     //public List<Transaction> transactionList;
 
     public Transaction(){
@@ -18,9 +24,11 @@ public class Transaction {
         this.sourceOfSpendOrEarning = sourceOfSpendOrEarning;
         this.amount = amount;
         this.description = description;
-        //this.transactionList = new ArrayList<>();
+    //this.transactionList = new ArrayList<>();
 
     }
+
+
 
     @Override
     public String toString() {
@@ -30,6 +38,7 @@ public class Transaction {
                 ", amount='" + amount + '\'' +
                 ", sourceOfSpendOrEarning='" + sourceOfSpendOrEarning + '\'' +
                 ", description='" + description + '\'' +
+
                 '}';
     }
     //    public void setTransactions(List<Transaction> transactions){

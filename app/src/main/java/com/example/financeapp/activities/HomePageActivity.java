@@ -130,10 +130,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         currentBalance.setText(String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
-                        if (task.getResult() != null){
-//                           if (task.getResult().getValue() != null && (long) task.getResult().getValue() <=0.0){
-//                               createBudgetAlert("You have exceeded the Budget Limit!");
-//                           };
+
+                        if (task.getResult() != null && task.getResult().getValue() != null){
+                            String stringToConvert = String.valueOf(task.getResult().getValue());
+                            Double convertedLongBalance = Double.parseDouble(stringToConvert);
+                               if (convertedLongBalance <=0.0) {
+                                   createBudgetAlert("You have exceeded the Budget Limit!");
+                               };
                         }
                         Log.d("TheCurrentBalance", Objects.requireNonNull(task.getResult().getValue()).toString());
                     } else {
@@ -230,12 +233,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
                 break;
             case R.id.nav_history:
-//                Intent intent = new Intent(HomePageActivity.this, HistoryActivity.class);
-//                startActivity(intent);
+                intent = new Intent( HomePageActivity.this, HistoryActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_profile:
-//                Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
-//                startActivity(intent);
+//              intent = new Intent(HomePageActivity.this, ProfileActivity.class);
+//              startActivity(intent);
                 break;
 
         }
