@@ -53,6 +53,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private List<Transaction> listOfTransactions;
     private static final int budgetNotificationID = 1;
     private DrawerLayout drawerLayout;
+    private double budgetLimit = 0.0;
+    private boolean oneTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 //    }
 
     private void fetchBalanceFromFirebase() {
+        getBudgetLimit();
+        getOneTime();
         try {
             String clientId = mAuth.getCurrentUser().getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
@@ -132,17 +136,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         currentBalance.setText(String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
-                        double budgetLimit = Double.parseDouble(getBudgetLimitStr());
+
                         if (task.getResult() != null && task.getResult().getValue() != null){
                             String stringToConvert = String.valueOf(task.getResult().getValue());
                             Double convertedLongBalance = Double.parseDouble(stringToConvert);
-                               if (convertedLongBalance <= budgetLimit) {
+                               if (convertedLongBalance <= budgetLimit && !oneTime) {
                                    createBudgetAlert("You have exceeded the Budget Limit!");
-                                   //setBudgetAlertOneTime(true);
+                                   setBudgetAlertOneTime(true);
                                }
-//                               else if (convertedLongBalance > budgetLimit) {
-//                                   setBudgetAlertOneTime(false);
-//                               }
+                               else if (convertedLongBalance > budgetLimit && oneTime) {
+                                   setBudgetAlertOneTime(false);
+                               }
                         }
                         Log.d("TheCurrentBalance", Objects.requireNonNull(task.getResult().getValue()).toString());
                     } else {
@@ -179,8 +183,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
     }
 
-    private synchronized String getBudgetLimitStr() {
-        final String budgetLimitStr[] = {"0.0"};
+    private void getBudgetLimit() {
         String clientId = mAuth.getCurrentUser().getUid();
         DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
         baRef.child("budgetLimit").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
@@ -190,14 +193,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     Log.e("firebase", "Error getting data", task.getException());
                 }
                 else {
-                    budgetLimitStr[0] = String.valueOf(Objects.requireNonNull(task.getResult()).getValue());
-                    Log.d("firebase", budgetLimitStr[0]);
+                    String budgetLimitStr = String.valueOf(Objects.requireNonNull(task.getResult()).getValue());
+                    budgetLimit = Double.parseDouble(budgetLimitStr);
+                    Log.d("firebase", budgetLimitStr);
                 }
             }
         });
-        // @TODO Issues where this action happen before retrieving data from firebase is completed
-        Log.d("firebase after baRef", budgetLimitStr[0]);
-        return "0.0";
     }
     // oneTime is true when budget alert is fired off once already while being below the budget limit
     private void setBudgetAlertOneTime(boolean oneTime) {
@@ -218,8 +219,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             Log.d("HomePageActivity", e.toString());
         }
     }
-    private boolean getOneTime() {
-        //final boolean[] oneTime = {false};
+    private void getOneTime() {
         String clientId = mAuth.getCurrentUser().getUid();
         DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
         baRef.child("oneTime").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
@@ -229,11 +229,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     Log.e("firebase", "Error getting data", task.getException());
                 }
                 else {
-                    //oneTime[0] = (Boolean) Objects.requireNonNull(task.getResult()).getValue();
+                    oneTime = (Boolean) Objects.requireNonNull(task.getResult()).getValue();
+                    Log.d("firebase oneTime", String.valueOf(oneTime));
                 }
             }
         });
-        return false;
     }
 
     @Override
