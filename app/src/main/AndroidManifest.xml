@@ -11,6 +11,10 @@
         <activity android:name=".activities.ProfileActivity"></activity>
         <activity android:name=".activities.ForgotPasswordActivity" />
         <activity android:name=".activities.InitSetupActivity" />
+        <activity android:name=".activities.ChartActivity" ></activity>
+        <activity android:name=".activities.HistoryActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".activities.NewTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar" />

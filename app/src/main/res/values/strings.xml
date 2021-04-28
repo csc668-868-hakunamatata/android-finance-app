@@ -48,4 +48,7 @@
     <string name="forgotPassword">Forgot Password?</string>
     <string name="resetPass">RESET PASSWORD</string>
 
+    <string name="chart_title">History</string>
+
+
 </resources>
