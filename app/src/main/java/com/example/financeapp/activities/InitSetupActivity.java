@@ -23,6 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.UUID;
 
+/*
+    @author Ninh Le
+ */
+
 public class InitSetupActivity extends AppCompatActivity {
     private EditText budgetLimit;
     private Button submit, cancel;
@@ -38,6 +42,8 @@ public class InitSetupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
     public void cancelBudgetLimit(View view){
+        String clientId = mAuth.getCurrentUser().getUid();
+        storeBudgetAlert(clientId, "0.0", false);
         Intent intent = new Intent(InitSetupActivity.this, HomePageActivity.class);
         InitSetupActivity.this.startActivity(intent);
         finish();
@@ -56,13 +62,15 @@ public class InitSetupActivity extends AppCompatActivity {
             budgetLimitNum = Float.parseFloat(budgetLimitInput);
         }catch(NumberFormatException e) {
             Log.d("InitSetupActivity", e.toString());
+            budgetLimit.requestFocus();
+            return;
         }
-        storeBudgetAlert(clientId, budgetLimitNum);
+        storeBudgetAlert(clientId, budgetLimitInput, true);
     }
 
-    private void storeBudgetAlert(String clientId, float budgetLimit) {
+    private void storeBudgetAlert(String clientId, String budgetLimit, boolean onOrOff) {
         BudgetAlert budgetAlert = new BudgetAlert(clientId, budgetLimit);
-
+        budgetAlert.setAlertOn(onOrOff);
         try {
             DatabaseReference database = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
             database.setValue(budgetAlert).addOnCompleteListener(new OnCompleteListener<Void>() {

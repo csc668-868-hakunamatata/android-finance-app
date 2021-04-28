@@ -5,14 +5,14 @@ package com.example.financeapp.utilities;
 
 public class BudgetAlert {
     private String clientId;
-    private float budgetLimit;
+    private String budgetLimit;
     private boolean alertOn = false;
     // oneTime tracks push notification so that it only trigger once when below budget limit
     private boolean oneTime = false;
 
     public BudgetAlert(){}
 
-    public BudgetAlert(String clientId, float budgetLimit){
+    public BudgetAlert(String clientId, String budgetLimit){
         this.clientId = clientId;
         this.budgetLimit = budgetLimit;
         this.alertOn = true;
@@ -28,6 +28,8 @@ public class BudgetAlert {
         this.alertOn = onOrOff;
     }
     public void setOneTime(boolean onOrOff) { this.oneTime = onOrOff; }
+    public void setBudgetLimit(String budgetLimit) { this.budgetLimit = budgetLimit; }
     public boolean getAlertOn() { return this.alertOn; }
     public boolean getOneTime() { return this.oneTime; }
+    public String getBudgetLimit() { return budgetLimit; }
 }

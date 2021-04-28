@@ -46,7 +46,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 if(firebaseUser!=null){
                     Log.d("TestingApp", "passed");
                     Toast.makeText(SignupActivity.this, "User Created Successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SignupActivity.this, HomePageActivity.class);
+                    Intent intent = new Intent(SignupActivity.this, InitSetupActivity.class);
                     startActivity(intent);
                 }else{
                     Log.d("TestingApp", "failed");

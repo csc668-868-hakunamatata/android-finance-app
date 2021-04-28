@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.financeapp.R;
@@ -130,13 +132,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         currentBalance.setText(String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
-
+                        double budgetLimit = Double.parseDouble(getBudgetLimitStr());
                         if (task.getResult() != null && task.getResult().getValue() != null){
                             String stringToConvert = String.valueOf(task.getResult().getValue());
                             Double convertedLongBalance = Double.parseDouble(stringToConvert);
-                               if (convertedLongBalance <=0.0) {
+                               if (convertedLongBalance <= budgetLimit) {
                                    createBudgetAlert("You have exceeded the Budget Limit!");
-                               };
+                                   //setBudgetAlertOneTime(true);
+                               }
+//                               else if (convertedLongBalance > budgetLimit) {
+//                                   setBudgetAlertOneTime(false);
+//                               }
                         }
                         Log.d("TheCurrentBalance", Objects.requireNonNull(task.getResult().getValue()).toString());
                     } else {
@@ -171,6 +177,63 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mAuth.signOut();
         Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    private synchronized String getBudgetLimitStr() {
+        final String budgetLimitStr[] = {"0.0"};
+        String clientId = mAuth.getCurrentUser().getUid();
+        DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
+        baRef.child("budgetLimit").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    budgetLimitStr[0] = String.valueOf(Objects.requireNonNull(task.getResult()).getValue());
+                    Log.d("firebase", budgetLimitStr[0]);
+                }
+            }
+        });
+        // @TODO Issues where this action happen before retrieving data from firebase is completed
+        Log.d("firebase after baRef", budgetLimitStr[0]);
+        return "0.0";
+    }
+    // oneTime is true when budget alert is fired off once already while being below the budget limit
+    private void setBudgetAlertOneTime(boolean oneTime) {
+        try {
+            String clientId = mAuth.getCurrentUser().getUid();
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
+            database.child("oneTime").setValue(oneTime).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d("HomePageActivity", "Successfully changed oneTime");
+                    } else {
+                        Log.d("HomePageActivity", "Failed to change oneTime");
+                    }
+                }
+            });
+        }catch(Exception e){
+            Log.d("HomePageActivity", e.toString());
+        }
+    }
+    private boolean getOneTime() {
+        //final boolean[] oneTime = {false};
+        String clientId = mAuth.getCurrentUser().getUid();
+        DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
+        baRef.child("oneTime").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    //oneTime[0] = (Boolean) Objects.requireNonNull(task.getResult()).getValue();
+                }
+            }
+        });
+        return false;
     }
 
     @Override
