@@ -49,6 +49,7 @@
     <string name="resetPass">RESET PASSWORD</string>
 
     <string name="chart_title">History</string>
+    <string name="takePhoto">Take Photo</string>
 
 
 </resources>
