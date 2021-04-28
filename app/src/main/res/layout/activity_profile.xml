@@ -36,25 +36,25 @@
             android:textAlignment="textEnd" />
     </LinearLayout>
     <RadioGroup
-        android:id="@+id/RG_initSetUp"
+        android:id="@+id/RG_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="horizontal"
         android:layout_gravity="right">
         <RadioButton
-            android:id="@+id/rb_profile_weekly"
+            android:id="@+id/rb_profile_on"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:checked="true"
-            android:text="Weekly" />
+            android:text="On" />
         <RadioButton
-            android:id="@+id/rb_profile_monthly"
+            android:id="@+id/rb_profile_off"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Monthly" />
+            android:text="Off" />
     </RadioGroup>
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,30 +81,7 @@
             android:autofillHints=""
             android:textAlignment="textEnd" />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="15dp">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/budgetAlert"
-            android:textStyle="bold" />
-        <EditText
-            android:id="@+id/et_profile_budget_alert"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="% Budget Limit"
-            android:background="@drawable/text_border"
-            android:inputType="numberDecimal"
-            android:textSize="18sp"
-            android:padding="10dp"
-            android:autofillHints=""
-            android:textAlignment="textEnd" />
-    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_buttons"
         android:layout_width="match_parent"

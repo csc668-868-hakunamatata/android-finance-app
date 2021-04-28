@@ -12,26 +12,6 @@
         android:layout_margin="8dp"
         android:layout_marginTop="32dp"
         android:text="@string/initPrompt"/>
-    <RadioGroup
-        android:id="@+id/RG_initSetUp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:orientation="horizontal">
-        <RadioButton
-            android:id="@+id/RB_weekly"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:text="Weekly"/>
-        <RadioButton
-            android:id="@+id/RB_monthly"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="Monthly"/>
-    </RadioGroup>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,31 +32,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:hint="@string/budgetLimit"
-        android:background="@drawable/text_border"
-        android:inputType="numberDecimal"
-        android:textSize="18sp"
-        android:padding="10dp"
-        android:autofillHints="" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:textAlignment="textStart"
-        android:text="@string/budgetAlert"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-    <EditText
-        android:id="@+id/ET_budgetAlert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:hint="@string/budgetAlert"
         android:background="@drawable/text_border"
         android:inputType="numberDecimal"
         android:textSize="18sp"

@@ -36,8 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         profileName = (TextView) findViewById(R.id.tv_profile_name);
         et_budgetLimit = (EditText) findViewById(R.id.et_profile_budget_limit);
-        et_budgetAlert = (EditText) findViewById(R.id.et_profile_budget_alert);
-        profileRadioGroup = (RadioGroup)findViewById(R.id.RG_initSetUp);
+        profileRadioGroup = (RadioGroup)findViewById(R.id.RG_profile);
         saveProfile = (Button) findViewById(R.id.btn_save);
         mAuth = FirebaseAuth.getInstance();
         try {
@@ -54,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 }
             });
+            // hardcoded
             et_budgetLimit.setHint("200.00");
             et_budgetAlert.setHint("70.0");
         } catch (Exception e){

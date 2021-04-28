@@ -4,32 +4,30 @@ package com.example.financeapp.utilities;
  */
 
 public class BudgetAlert {
-    private String clientUid;
-    private String frequency;
+    private String clientId;
     private float budgetLimit;
-    private float budgetAlertPercent;
     private boolean alertOn = false;
+    // oneTime tracks push notification so that it only trigger once when below budget limit
+    private boolean oneTime = false;
 
     public BudgetAlert(){}
 
-    public BudgetAlert(String clientUid, String frequency, float budgetLimit, float budgetAlertPercent){
-        this.clientUid = clientUid;
-        this.frequency = frequency;
+    public BudgetAlert(String clientId, float budgetLimit){
+        this.clientId = clientId;
         this.budgetLimit = budgetLimit;
-        this.budgetAlertPercent = budgetAlertPercent;
         this.alertOn = true;
     }
 
     @Override
     public String toString(){
-        return "Transaction{" +
-                "clientUid='" + clientUid + '\'' +
-                ", frequency='" + frequency + '\'' +
-                ", budgetLimit='" + budgetLimit + '\'' +
-                ", budgetAlertPercent'" + budgetAlertPercent + '\'' +
+        return "BudgetLimit{" +
+                "budgetLimit='" + budgetLimit + '\'' +
                 '}';
     }
     public void setAlertOn(boolean onOrOff) {
         this.alertOn = onOrOff;
     }
+    public void setOneTime(boolean onOrOff) { this.oneTime = onOrOff; }
+    public boolean getAlertOn() { return this.alertOn; }
+    public boolean getOneTime() { return this.oneTime; }
 }
