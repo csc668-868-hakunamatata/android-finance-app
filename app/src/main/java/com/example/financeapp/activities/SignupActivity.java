@@ -1,6 +1,5 @@
 package com.example.financeapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,15 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.financeapp.ViewModel.SignupViewModel;
-import com.example.financeapp.model.Client;
+import com.example.financeapp.ViewModel.SignUpAndInViewModel;
 import com.example.financeapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener{
@@ -32,15 +26,15 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private TextView backToLogin;
     private Button signUp;
     private EditText signupName, signupEmail, signupPassword;
-    private SignupViewModel signupViewModel;
+    private SignUpAndInViewModel signUpAndInViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        signupViewModel = new ViewModelProvider(this).get(SignupViewModel.class);
-        signupViewModel.getUserData().observe(this, new Observer<FirebaseUser>() {
+        signUpAndInViewModel = new ViewModelProvider(this).get(SignUpAndInViewModel.class);
+        signUpAndInViewModel.getUserData().observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if(firebaseUser!=null){
@@ -50,7 +44,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                     startActivity(intent);
                 }else{
                     Log.d("TestingApp", "failed");
-                    Toast.makeText(SignupActivity.this, "User Creation Failed", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(SignupActivity.this, "User Creation Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -111,6 +105,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        signupViewModel.register(name, email, password);
+        signUpAndInViewModel.register(name, email, password);
     }
 }

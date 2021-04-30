@@ -2,9 +2,13 @@ package com.example.financeapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.financeapp.R;
+import com.example.financeapp.ViewModel.SignUpAndInViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView forgotPassword;
     private Button loginButton;
     private FirebaseAuth mAuth;
-
+    private SignUpAndInViewModel signUpAndInViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
 //            startActivity(intent);
         }
+
+        signUpAndInViewModel = new ViewModelProvider(this).get(SignUpAndInViewModel.class);
+        signUpAndInViewModel.getUserData().observe(this, new Observer<FirebaseUser>() {
+            @Override
+            public void onChanged(FirebaseUser firebaseUser) {
+                if(firebaseUser!=null){
+                    Log.d("TestingApp", "login passed");
+                    Toast.makeText(LoginActivity.this, "User Logged In Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                    startActivity(intent);
+                }else{
+                    Log.d("TestingApp", "login failed");
+                    Toast.makeText(LoginActivity.this, "User Login Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         TextView noAccount = (TextView) findViewById(R.id.noAccount);
         noAccount.setOnClickListener(this);
@@ -102,16 +123,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                    LoginActivity.this.startActivity(intent);
-                }else{
-                    Toast.makeText(LoginActivity.this, "InValid Credentials", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if(task.isSuccessful()){
+//                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+//                    LoginActivity.this.startActivity(intent);
+//                }else{
+//                    Toast.makeText(LoginActivity.this, "InValid Credentials", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+        signUpAndInViewModel.login(email, password);
     }
 }

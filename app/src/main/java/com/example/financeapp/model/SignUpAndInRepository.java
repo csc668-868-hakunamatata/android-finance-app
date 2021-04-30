@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.financeapp.activities.HomePageActivity;
+import com.example.financeapp.activities.LoginActivity;
 import com.example.financeapp.activities.SignupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,12 +17,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignupRepository {
+public class SignUpAndInRepository {
     private Application application;
     private MutableLiveData<FirebaseUser> userData;
     private FirebaseAuth mAuth;
 
-    public SignupRepository(Application application){
+    public SignUpAndInRepository(Application application){
         this.application = application;
 
         userData = new MutableLiveData<>();
@@ -53,6 +54,19 @@ public class SignupRepository {
                         }
                     }
                 });
+    }
+
+    public void login(String email, String password){
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    userData.postValue(mAuth.getCurrentUser());
+                }else{
+                    //Toast.makeText(application, "Failed Login", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public MutableLiveData<FirebaseUser> getUserData() {
