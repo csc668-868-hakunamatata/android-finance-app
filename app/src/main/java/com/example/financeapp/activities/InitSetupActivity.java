@@ -23,66 +23,56 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.UUID;
 
+/*
+    @author Ninh Le
+ */
+
 public class InitSetupActivity extends AppCompatActivity {
-    private EditText budgetLimit, ET_budgetAlert;
+    private EditText budgetLimit;
     private Button submit, cancel;
     private FirebaseAuth mAuth;
-    private RadioGroup initRadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init_setup);
         budgetLimit = (EditText) findViewById(R.id.ET_budgetLimit);
-        ET_budgetAlert = (EditText) findViewById(R.id.ET_budgetAlert);
         submit = (Button) findViewById(R.id.btn_confirm);
         cancel = (Button) findViewById(R.id.btn_cancel);
-        initRadioGroup = (RadioGroup)findViewById(R.id.RG_initSetUp);
         mAuth = FirebaseAuth.getInstance();
     }
     public void cancelBudgetLimit(View view){
-
+        String clientId = mAuth.getCurrentUser().getUid();
+        storeBudgetAlert(clientId, "0.0", false);
+        Intent intent = new Intent(InitSetupActivity.this, HomePageActivity.class);
+        InitSetupActivity.this.startActivity(intent);
+        finish();
     }
+
     public void submitBudgetLimit(View view) {
         String budgetLimitInput = budgetLimit.getText().toString();
         float budgetLimitNum = 0.0f;
-        String budgetAlertInput = ET_budgetAlert.getText().toString();
-        float budgetAlertNum = 0.0f;
         String clientId = mAuth.getCurrentUser().getUid();
-        String frequency = "";
         if(budgetLimitInput.isEmpty()){
             budgetLimit.setError("Please provide the amount");
             budgetLimit.requestFocus();
             return;
         }
-        if(budgetAlertInput.isEmpty()) {
-            ET_budgetAlert.setError("Please proved the amount");
-            ET_budgetAlert.requestFocus();
-            return;
-        }
         try {
             budgetLimitNum = Float.parseFloat(budgetLimitInput);
-            budgetAlertNum = Float.parseFloat(budgetAlertInput);
         }catch(NumberFormatException e) {
             Log.d("InitSetupActivity", e.toString());
+            budgetLimit.requestFocus();
+            return;
         }
-        int selectedRadioButton = initRadioGroup.getCheckedRadioButtonId();
-        if(selectedRadioButton == R.id.RB_weekly){
-            Log.d("InitSetupActivity", "Clicked on Weekly");
-            frequency = "Weekly";
-        }
-        else{
-            Log.d("InitSetupActivity", "Clicked on Monthly");
-            frequency = "Monthly";
-        }
-        storeBudgetAlert(clientId, frequency, budgetLimitNum, budgetAlertNum);
+        storeBudgetAlert(clientId, budgetLimitInput, true);
     }
 
-    private void storeBudgetAlert(String clientId, String frequency, float budgetLimit, final float budgetAlertPercent) {
-        BudgetAlert budgetAlert = new BudgetAlert(clientId, frequency, budgetLimit, budgetAlertPercent);
+    private void storeBudgetAlert(String clientId, String budgetLimit, boolean onOrOff) {
+        BudgetAlert budgetAlert = new BudgetAlert(clientId, budgetLimit);
+        budgetAlert.setAlertOn(onOrOff);
         try {
-            String budgetAlertId = UUID.randomUUID().toString();
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + budgetAlertId);
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
             database.setValue(budgetAlert).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {

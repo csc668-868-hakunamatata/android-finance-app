@@ -71,26 +71,18 @@ public class HistoryActivity extends HomePageActivity {
 
         //enter values
         recyclerView = findViewById(R.id.recyclerView);
-        newEntry = (Button) findViewById(R.id.newEntryButton);
-        currentBalance = (TextView) findViewById(R.id.currentBalance);
         mAuth = FirebaseAuth.getInstance();
 
         listOfTransactions = new ArrayList<>();
         fetchTransactionsFromFirebase();
-
-        newEntry.setOnClickListener(this);
-
-        //chart
-
-//        pieChart = findViewById(R.id.chart);
-//        System.out.println(getIntent());
-
     }
 
 
 
     private void loadPieChartData(List<Transaction> currentTransaction) {
-        expensePieChart = findViewById(R.id.chart); //TODO need to get deposit chart
+        expensePieChart = findViewById(R.id.chartDeposit); //TODO need to get deposit chart
+        depositPieChart = findViewById(R.id.chartExpense); //TODO need to get deposit chart
+
         ArrayList<PieEntry> tempDepositList = new ArrayList<>();
         ArrayList<PieEntry> tempExpenseList = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
@@ -106,7 +98,8 @@ public class HistoryActivity extends HomePageActivity {
                 totalDeposit += tempDouble;
             }
         }
-        setupPieChart();
+        setupPieChart(expensePieChart,"Spending by category");
+        setupPieChart(depositPieChart, "Deposit by category");
 
         for (int i =0; i< currentTransaction.size(); i++){
             if (currentTransaction.get(i).earnedOrSpent.toLowerCase().equals("spent")) {
@@ -142,31 +135,31 @@ public class HistoryActivity extends HomePageActivity {
         depositData.setDrawValues(true);
         depositData.setValueFormatter(new PercentFormatter(depositPieChart));
         depositData.setValueTextSize(12f);
-        depositData.setValueTextColor(Color.GREEN);
+        depositData.setValueTextColor(Color.BLACK);
 
         expensePieChart.setData(expenseData);
         expensePieChart.invalidate();
-//        depositPieChart.setData(depositData);
-//        depositPieChart.invalidate();
+        depositPieChart.setData(depositData);
+        depositPieChart.invalidate();
     }
 
-    private void setupPieChart(){
-        expensePieChart.setDrawHoleEnabled(true);
-        expensePieChart.setUsePercentValues(true);
-        //set labels
-        expensePieChart.setEntryLabelTextSize(12);
-        expensePieChart.setEntryLabelColor(Color.BLACK);
-        expensePieChart.setCenterText("Spending by Category");
-        expensePieChart.setCenterTextSize(24);
-        expensePieChart.getDescription().setEnabled(false);
+    private void setupPieChart(PieChart pieChartType, String label){
+        pieChartType.setDrawHoleEnabled(true);
+        pieChartType.setUsePercentValues(true);
+        //set labels for expense
+        pieChartType.setEntryLabelTextSize(12);
+        pieChartType.setEntryLabelColor(Color.BLACK);
+        pieChartType.setCenterText(label);
+        pieChartType.setCenterTextSize(12);
+        pieChartType.getDescription().setEnabled(false);
 
-        //set legend
-        Legend legend = expensePieChart.getLegend();
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        legend.setDrawInside(false);
-        legend.setEnabled(true);
+        //set legend for epxense
+        Legend pieChartTypeLegend = pieChartType.getLegend();
+        pieChartTypeLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        pieChartTypeLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        pieChartTypeLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        pieChartTypeLegend.setDrawInside(false);
+        pieChartTypeLegend.setEnabled(true);
     }
 
     private void fetchTransactionsFromFirebase() {
@@ -195,8 +188,6 @@ public class HistoryActivity extends HomePageActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
-
         });
     }
 
