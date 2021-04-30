@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.financeapp.R;
@@ -58,6 +59,7 @@ public class NewTransactionActivity extends HomePageActivity {
 
     String currentPhotoPath;
     Uri photoUri;
+    String total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +254,8 @@ public class NewTransactionActivity extends HomePageActivity {
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         int rotationDegree = 90;
+        final boolean[] foundTotal = {false};
+
 
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             //Get and set image from URI
@@ -293,10 +297,22 @@ public class NewTransactionActivity extends HomePageActivity {
                                     }
                                     //Line text
                                     System.out.println("Line text: " + lineText);
+                                    if(foundTotal[0]){
+                                        total = lineText;
+                                        System.out.println("Total: " + total);
+                                        foundTotal[0] = false;
+                                    }
+
+                                    if(lineText.contains("total")){
+                                        foundTotal[0] = true;
+                                    }
+
                                 }
                                 //Block text
                                 //System.out.println("Block text: " + blockText);
                             }
+                            System.out.println("Amount to set: " + total);
+                            amount.setText(total);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -304,7 +320,9 @@ public class NewTransactionActivity extends HomePageActivity {
                             System.out.println("ML Kit Failure");
                         }
                     });
+
         }
+
     }
 
     //Create image file
