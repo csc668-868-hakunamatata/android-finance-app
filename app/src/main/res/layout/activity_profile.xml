@@ -6,14 +6,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.ProfileActivity">
-
 <!--app:shapeAppearanceOverlay="@style/roundedImageViewRounded"-->
-    <com.google.android.material.imageview.ShapeableImageView
+
+    <ImageView
         android:id="@+id/profileDp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_marginTop="5dp"
+        android:padding="1dp"
+        android:background="#000000"
         android:src="@drawable/ic_profile"
 
         app:strokeColor="@android:color/white"
