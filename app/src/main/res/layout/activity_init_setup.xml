@@ -37,6 +37,31 @@
         android:textSize="18sp"
         android:padding="10dp"
         android:autofillHints="" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:textAlignment="textStart"
+        android:text="@string/initBalance"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/ET_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="@string/initBalance"
+        android:background="@drawable/text_border"
+        android:inputType="numberDecimal"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:autofillHints="" />
     <LinearLayout
         android:id="@+id/ll_buttons"
         android:layout_width="match_parent"

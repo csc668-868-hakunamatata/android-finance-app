@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.slider.Slider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,7 +29,7 @@ import java.util.UUID;
  */
 
 public class InitSetupActivity extends AppCompatActivity {
-    private EditText budgetLimit;
+    private EditText budgetLimit, initBalance;
     private Button submit, cancel;
     private FirebaseAuth mAuth;
 
@@ -37,6 +38,7 @@ public class InitSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init_setup);
         budgetLimit = (EditText) findViewById(R.id.ET_budgetLimit);
+        initBalance = (EditText) findViewById(R.id.ET_balance);
         submit = (Button) findViewById(R.id.btn_confirm);
         cancel = (Button) findViewById(R.id.btn_cancel);
         mAuth = FirebaseAuth.getInstance();
@@ -44,13 +46,12 @@ public class InitSetupActivity extends AppCompatActivity {
     public void cancelBudgetLimit(View view){
         String clientId = mAuth.getCurrentUser().getUid();
         storeBudgetAlert(clientId, "0.0", false);
-        Intent intent = new Intent(InitSetupActivity.this, HomePageActivity.class);
-        InitSetupActivity.this.startActivity(intent);
-        finish();
     }
 
     public void submitBudgetLimit(View view) {
         String budgetLimitInput = budgetLimit.getText().toString();
+        String initBalanceInput = initBalance.getText().toString();
+        float initBalanceNum = 0.0f;
         float budgetLimitNum = 0.0f;
         String clientId = mAuth.getCurrentUser().getUid();
         if(budgetLimitInput.isEmpty()){
@@ -58,13 +59,20 @@ public class InitSetupActivity extends AppCompatActivity {
             budgetLimit.requestFocus();
             return;
         }
+        if(budgetLimitInput.isEmpty()){
+            initBalance.setError("Please provide the amount");
+            initBalance.requestFocus();
+            return;
+        }
         try {
             budgetLimitNum = Float.parseFloat(budgetLimitInput);
+            initBalanceNum = Float.parseFloat(initBalanceInput);
         }catch(NumberFormatException e) {
             Log.d("InitSetupActivity", e.toString());
             budgetLimit.requestFocus();
             return;
         }
+        updateCurrentBalance(clientId, initBalanceInput);
         storeBudgetAlert(clientId, budgetLimitInput, true);
     }
 
@@ -90,5 +98,39 @@ public class InitSetupActivity extends AppCompatActivity {
         }catch(Exception e){
             Log.d("initSetupActivity", e.toString());
         }
+    }
+
+    private void updateCurrentBalance(String clientId, final String amountGiven) {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
+
+        try{
+            final String[] currentValue = new String[1];
+            ref.child("currentBalance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        currentValue[0] = String.valueOf(task.getResult().getValue());
+                        Double newValue = 0.0;
+                        newValue = Double.parseDouble(currentValue[0]) + Double.parseDouble(amountGiven);
+                        updateBalanceInDatabase(ref, newValue);
+                        Log.d("Firebase", currentValue[0]);
+                    }
+                }
+            });
+        }catch(Exception e){
+            Log.d("NewTransactionActivity", e.toString());
+        }
+
+    }
+
+    private void updateBalanceInDatabase(DatabaseReference ref, final double newValue){
+        ref.child("currentBalance").setValue(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d("Firebase", "Added New Value "+ newValue + " ");
+                }
+            }
+        });
     }
 }

@@ -55,6 +55,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private DrawerLayout drawerLayout;
     private double budgetLimit = 0.0;
     private boolean oneTime = false;
+    private boolean alertOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private void fetchBalanceFromFirebase() {
         getBudgetLimit();
         getOneTime();
+        getAlertOn();
         try {
             String clientId = mAuth.getCurrentUser().getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
@@ -140,11 +142,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         if (task.getResult() != null && task.getResult().getValue() != null){
                             String stringToConvert = String.valueOf(task.getResult().getValue());
                             Double convertedLongBalance = Double.parseDouble(stringToConvert);
-                               if (convertedLongBalance <= budgetLimit && !oneTime) {
-                                   createBudgetAlert("You have exceeded the Budget Limit!");
+                               if (convertedLongBalance <= budgetLimit && !oneTime && alertOn) {
+                                   createBudgetAlert("Your balance went below budget minimum: " + budgetLimit);
                                    setBudgetAlertOneTime(true);
                                }
-                               else if (convertedLongBalance > budgetLimit && oneTime) {
+                               else if (convertedLongBalance > budgetLimit && oneTime && alertOn) {
                                    setBudgetAlertOneTime(false);
                                }
                         }
@@ -218,6 +220,22 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }catch(Exception e){
             Log.d("HomePageActivity", e.toString());
         }
+    }
+    private void getAlertOn() {
+        String clientId = mAuth.getCurrentUser().getUid();
+        DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
+        baRef.child("alertOn").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    alertOn = (Boolean) Objects.requireNonNull(task.getResult()).getValue();
+                    Log.d("firebase alertOn", String.valueOf(alertOn));
+                }
+            }
+        });
     }
     private void getOneTime() {
         String clientId = mAuth.getCurrentUser().getUid();
