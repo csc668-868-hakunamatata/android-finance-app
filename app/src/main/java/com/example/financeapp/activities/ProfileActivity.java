@@ -54,17 +54,24 @@ public class ProfileActivity extends AppCompatActivity {
         try {
             final String clientId = mAuth.getCurrentUser().getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
-            try {
+
+
+
                 ref.addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Client client = snapshot.getValue(Client.class);
-                        if (client != null) {
-                            profileName.setText(client.getName());
-                            if (client.getImageUri() != null && !client.getImageUri().equals("")) {
-                                Picasso.get().load(client.getImageUri()).into(profilePic);
+                        Log.d("ErrorProfile", snapshot.getValue().toString());
+                        try {
+                            Client client = snapshot.getValue(Client.class);
+                            if (client != null) {
+                                profileName.setText(client.getName());
+                                if (client.getImageUri() != null && !client.getImageUri().equals("")) {
+                                    Picasso.get().load(client.getImageUri()).into(profilePic);
+                                }
                             }
+                        }catch(Exception error){
+                            Log.d("ErrorProfile", error.toString());
                         }
                     }
 
@@ -73,9 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
-            }catch(Exception error){
-                Log.d("ErrorProfile", "Error Occurred");
-            }
+
             ref.child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {

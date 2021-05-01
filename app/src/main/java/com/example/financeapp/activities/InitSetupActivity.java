@@ -104,16 +104,16 @@ public class InitSetupActivity extends AppCompatActivity {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
 
         try{
-            final String[] currentValue = new String[1];
+            //final String[] currentValue = new String[1];
             ref.child("currentBalance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if(task.isSuccessful()){
-                        currentValue[0] = String.valueOf(task.getResult().getValue());
-                        Double newValue = 0.0;
-                        newValue = Double.parseDouble(currentValue[0]) + Double.parseDouble(amountGiven);
-                        updateBalanceInDatabase(ref, newValue);
-                        Log.d("Firebase", currentValue[0]);
+//                        currentValue[0] = String.valueOf(task.getResult().getValue());
+//                        Double newValue = 0.0;
+//                        newValue = Double.parseDouble(currentValue[0]) + Double.parseDouble(amountGiven);
+                        updateBalanceInDatabase(ref, amountGiven);
+                        //Log.d("Firebase", currentValue[0]);
                     }
                 }
             });
@@ -123,7 +123,8 @@ public class InitSetupActivity extends AppCompatActivity {
 
     }
 
-    private void updateBalanceInDatabase(DatabaseReference ref, final double newValue){
+    private void updateBalanceInDatabase(DatabaseReference ref, final String newValue){
+        //String updatedValue = String.valueOf(newValue);
         ref.child("currentBalance").setValue(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

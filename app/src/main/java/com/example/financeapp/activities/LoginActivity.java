@@ -40,21 +40,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgotPassword.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-//        if(mAuth.getCurrentUser()!=null){
-//            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//
-//            // Name, email address, and profile photo Url
-//            assert user != null;
-//            String name = user.getDisplayName();
-//            String email = user.getEmail();
-//            Uri photoUrl = user.getPhotoUrl();
-//
-//            // Check if user's email is verified
-//            boolean emailVerified = user.isEmailVerified();
-//
-////            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-////            startActivity(intent);
-//        }
 
         signUpAndInViewModel = new ViewModelProvider(this).get(SignUpAndInViewModel.class);
         signUpAndInViewModel.getUserData().observe(this, new Observer<FirebaseUser>() {
@@ -122,18 +107,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             userPassword.requestFocus();
             return;
         }
-
-//        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if(task.isSuccessful()){
-//                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-//                    LoginActivity.this.startActivity(intent);
-//                }else{
-//                    Toast.makeText(LoginActivity.this, "InValid Credentials", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
         signUpAndInViewModel.login(email, password);
     }

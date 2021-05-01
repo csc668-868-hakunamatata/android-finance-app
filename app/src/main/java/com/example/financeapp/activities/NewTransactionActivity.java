@@ -141,7 +141,7 @@ public class NewTransactionActivity extends HomePageActivity {
                             newValue = Double.parseDouble(currentValue[0]) + Double.parseDouble(amountGiven);
                         }
 
-                        updateBalanceInDatabase(ref, newValue);
+                        updateBalanceInDatabase(ref, String.valueOf(newValue));
                         Log.d("Firebase", currentValue[0]);
                     }
                 }
@@ -152,7 +152,7 @@ public class NewTransactionActivity extends HomePageActivity {
 
     }
 
-    private void updateBalanceInDatabase(DatabaseReference ref, final double newValue){
+    private void updateBalanceInDatabase(DatabaseReference ref, final String newValue){
         ref.child("currentBalance").setValue(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
