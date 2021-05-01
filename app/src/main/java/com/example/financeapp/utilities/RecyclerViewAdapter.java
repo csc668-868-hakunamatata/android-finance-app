@@ -1,6 +1,8 @@
 package com.example.financeapp.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.MyViewHolder holder, int position) {
         holder.displaySource.setText(listOfTransactions.get(position).sourceOfSpendOrEarning);
+        if(listOfTransactions.get(position).earnedOrSpent.equalsIgnoreCase("earned")){
+            holder.displayEarnedOrSpent.setText(listOfTransactions.get(position).toString());
+            //holder.displayEarnedOrSpent.setTextColor(0x008000);
+        }else{
+            holder.displayEarnedOrSpent.setText(listOfTransactions.get(position).toString());
+            holder.displayEarnedOrSpent.setTextColor(Color.RED);
+        }
         holder.displayEarnedOrSpent.setText(listOfTransactions.get(position).earnedOrSpent);
         holder.displayAmount.setText(listOfTransactions.get(position).amount);
     }

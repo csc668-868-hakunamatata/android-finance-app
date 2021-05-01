@@ -1,6 +1,7 @@
 package com.example.financeapp.ViewModel;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -19,8 +20,8 @@ public class SignUpAndInViewModel extends AndroidViewModel {
         userData = signUpAndInRepository.getUserData();
     }
 
-    public void register(String name, String email, String password){
-        signUpAndInRepository.register(name, email, password);
+    public void register(String name, String email, String password, Uri image){
+        signUpAndInRepository.register(name, email, password, image);
     }
 
     public void login(String email, String password){

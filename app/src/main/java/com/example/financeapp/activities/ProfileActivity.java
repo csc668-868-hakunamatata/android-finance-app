@@ -10,18 +10,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.financeapp.R;
+import com.example.financeapp.model.Client;
 import com.example.financeapp.utilities.BudgetAlert;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 /*
@@ -33,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button saveProfile;
     private FirebaseAuth mAuth;
     private RadioGroup profileRadioGroup;
+    private ImageView profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +48,34 @@ public class ProfileActivity extends AppCompatActivity {
         et_budgetLimit = (EditText) findViewById(R.id.et_profile_budget_limit);
         profileRadioGroup = (RadioGroup)findViewById(R.id.RG_profile);
         saveProfile = (Button) findViewById(R.id.btn_save);
+        profilePic = findViewById(R.id.profileDp);
+
         mAuth = FirebaseAuth.getInstance();
         try {
-            String clientId = mAuth.getCurrentUser().getUid();
+            final String clientId = mAuth.getCurrentUser().getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
+            try {
+                ref.addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Client client = snapshot.getValue(Client.class);
+                        if (client != null) {
+                            profileName.setText(client.getName());
+                            if (client.getImageUri() != null && !client.getImageUri().equals("")) {
+                                Picasso.get().load(client.getImageUri()).into(profilePic);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }catch(Exception error){
+                Log.d("ErrorProfile", "Error Occurred");
+            }
             ref.child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
