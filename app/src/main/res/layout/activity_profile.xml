@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activities.ProfileActivity">
+    tools:context=".activities.ProfileActivity"
+    android:orientation="vertical">
 <!--app:shapeAppearanceOverlay="@style/roundedImageViewRounded"-->
 
     <ImageView
@@ -13,16 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:layout_marginTop="5dp"
         android:padding="1dp"
-        android:background="#000000"
         android:src="@drawable/ic_profile"
-
         app:strokeColor="@android:color/white"
-        app:strokeWidth="5dp" />
+        app:strokeWidth="5dp"
+        android:contentDescription="@string/profile_image" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="John Doe"
-            android:textAlignment="textEnd" />
+            android:textAlignment="textStart" />
     </LinearLayout>
     <RadioGroup
         android:id="@+id/RG_profile"
@@ -49,20 +48,20 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="horizontal"
-        android:layout_gravity="right">
+        android:layout_gravity="end">
         <RadioButton
             android:id="@+id/rb_profile_on"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:checked="true"
-            android:text="On" />
+            android:text="@string/on" />
         <RadioButton
             android:id="@+id/rb_profile_off"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Off" />
+            android:text="@string/off" />
     </RadioGroup>
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,7 +72,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="@string/budgetLimit"
             android:textStyle="bold" />
         <EditText
@@ -93,19 +92,20 @@
     <LinearLayout
         android:id="@+id/ll_buttons"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="59px"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:layout_margin="15dp">
+        android:layout_margin="15dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_save"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:text="Save"
-            android:onClick="saveProfile"/>
+            android:layout_weight="1"
+            android:onClick="saveProfile"
+            android:text="@string/save" />
     </LinearLayout>
 
 </LinearLayout>

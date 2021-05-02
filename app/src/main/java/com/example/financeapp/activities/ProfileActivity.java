@@ -1,7 +1,10 @@
 package com.example.financeapp.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -20,6 +23,7 @@ import com.example.financeapp.model.Client;
 import com.example.financeapp.utilities.BudgetAlert;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +36,7 @@ import java.util.Objects;
 /*
     @author Ninh Le
  */
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends HomePageActivity {
     private TextView profileName;
     private EditText et_budgetLimit;
     private Button saveProfile;
@@ -43,7 +47,22 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_nav_profile);
+
+        //navigation
+        DrawerLayout drawerLayout;
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //enter profile
         profileName = (TextView) findViewById(R.id.tv_profile_name);
         et_budgetLimit = (EditText) findViewById(R.id.et_profile_budget_limit);
         profileRadioGroup = (RadioGroup)findViewById(R.id.RG_profile);
@@ -52,7 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         try {
-            final String clientId = mAuth.getCurrentUser().getUid();
+            final String clientId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
 
 

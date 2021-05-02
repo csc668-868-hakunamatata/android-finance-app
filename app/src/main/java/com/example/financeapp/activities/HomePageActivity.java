@@ -238,7 +238,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         });
     }
     private void getOneTime() {
-        String clientId = mAuth.getCurrentUser().getUid();
+        String clientId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
         baRef.child("oneTime").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>(){
             @Override
