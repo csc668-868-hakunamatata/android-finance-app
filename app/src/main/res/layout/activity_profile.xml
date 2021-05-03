@@ -10,12 +10,13 @@
 
     <ImageView
         android:id="@+id/profileDp"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
         android:layout_marginRight="5dp"
         android:adjustViewBounds="true"
+        android:layout_gravity="center"
         android:padding="1dp"
         android:src="@drawable/ic_profile"
         app:strokeColor="@android:color/white"
@@ -92,7 +93,7 @@
     <LinearLayout
         android:id="@+id/ll_buttons"
         android:layout_width="match_parent"
-        android:layout_height="59px"
+        android:layout_height="0dp"
         android:layout_gravity="bottom"
         android:layout_margin="15dp"
         android:layout_weight="1"
@@ -101,7 +102,7 @@
         <Button
             android:id="@+id/btn_save"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:onClick="saveProfile"

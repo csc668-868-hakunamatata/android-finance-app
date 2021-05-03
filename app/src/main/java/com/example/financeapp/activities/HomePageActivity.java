@@ -142,12 +142,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         if (task.getResult() != null && task.getResult().getValue() != null){
                             String stringToConvert = String.valueOf(task.getResult().getValue());
                             Double convertedLongBalance = Double.parseDouble(stringToConvert);
-                               if (convertedLongBalance <= budgetLimit && !oneTime && alertOn) {
-                                   createBudgetAlert("Your balance went below budget minimum: " + budgetLimit);
+                               if (convertedLongBalance <= budgetLimit && !oneTime) {
+                                   if (alertOn) {
+                                       createBudgetAlert("Your balance went below budget minimum: " + budgetLimit);
+                                   }
                                    setBudgetAlertOneTime(true);
                                }
-                               else if (convertedLongBalance > budgetLimit && oneTime && alertOn) {
+                               else if (convertedLongBalance > budgetLimit) {
                                    setBudgetAlertOneTime(false);
+                               }
+                               else {
                                }
                         }
                         Log.d("TheCurrentBalance", Objects.requireNonNull(task.getResult().getValue()).toString());
