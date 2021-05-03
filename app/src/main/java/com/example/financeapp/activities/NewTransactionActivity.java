@@ -44,6 +44,7 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -255,6 +256,8 @@ public class NewTransactionActivity extends HomePageActivity {
         super.onActivityResult(requestCode, resultCode, data);
         int rotationDegree = 90;
         final boolean[] foundTotal = {false};
+        final ArrayList<String> list = new ArrayList<>();
+        final ArrayList<String> itemsList = new ArrayList<>();
 
 
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -296,23 +299,46 @@ public class NewTransactionActivity extends HomePageActivity {
                                         //Elements
                                     }
                                     //Line text
-                                    System.out.println("Line text: " + lineText);
+                                    //System.out.println("Line text: " + lineText);
+                                    itemsList.add(lineText);
+
                                     if(foundTotal[0]){
-                                        total = lineText;
-                                        System.out.println("Total: " + total);
+                                        //total = lineText;
+                                        //System.out.println("Total: " + total);
                                         foundTotal[0] = false;
+
                                     }
 
-                                    if(lineText.contains("total")){
+                                    if(lineText.contains("$")){
                                         foundTotal[0] = true;
+                                        list.add(lineText);
+
                                     }
 
                                 }
                                 //Block text
                                 //System.out.println("Block text: " + blockText);
                             }
-                            System.out.println("Amount to set: " + total);
+                            total = list.get(list.size() - 1);
+                            //System.out.println("Amount to set: " + total);
+                            //System.out.println("Last item: " + list.get(list.size() - 1));
+
+                            //Gets the rest of the items for the description
+                            StringBuilder sb = new StringBuilder();
+                            for(String s : itemsList){
+                                System.out.println("Items List: " + s);
+                                sb.append(s);
+                                sb.append("\n");
+                            }
+
+                            //Strips the $ from the string
+                            StringBuilder stringBuilder = new StringBuilder(total);
+                            stringBuilder.deleteCharAt(0);
+                            total = stringBuilder.toString();
+
+                            //System.out.println("Total: " + total);
                             amount.setText(total);
+                            description.setText(sb.toString());
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
