@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".activities.NewTransactionActivity">
 
+    <Button
+        android:id="@+id/photoButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="54dp"
+        android:text="@string/takePhoto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -36,10 +49,10 @@
                 android:id="@+id/radioEarning"
                 android:layout_width="198dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
                 android:layout_marginRight="0dp"
                 android:text="@string/earning"
-                android:textSize="18sp"
-                android:layout_marginEnd="0dp" />
+                android:textSize="18sp" />
 
         </RadioGroup>
 
@@ -81,15 +94,15 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:hint="@string/enterAmount"
+        android:autofillHints=""
         android:background="@drawable/text_border"
+        android:hint="@string/enterAmount"
         android:inputType="numberDecimal"
-        android:textSize="18sp"
         android:padding="10dp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountEntry"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/amountEntry" />
 
     <TextView
         android:id="@+id/textView4"
@@ -116,15 +129,15 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:ems="10"
+        android:autofillHints=""
         android:background="@drawable/text_border"
+        android:ems="10"
         android:hint="@string/enterSource"
         android:inputType="textPersonName"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView5"
@@ -151,15 +164,15 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:autofillHints=""
+        android:background="@drawable/text_border"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/optionalDescription"
-        android:background="@drawable/text_border"
-        android:padding="10dp"
         android:inputType="textMultiLine"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

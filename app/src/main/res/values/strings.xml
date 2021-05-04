@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">FinanceApp</string>
-    <string name="password">Your Password</string>
-    <string name="email">Your Email</string>
-    <string name="fullName">Full Name</string>
+    <string name="password">Password...</string>
+    <string name="email">email...</string>
+    <string name="fullName">Full Name...</string>
     <string name="backToLogin">Back to Login</string>
     <string name="signUp">SIGN UP</string>
     <string name="login">LOGIN</string>
@@ -42,18 +42,14 @@
     <string name="profile">Profile</string>
     <string name="history">History</string>
     <string name="home">Home</string>
-    <string name="initPrompt">Would you like to set up your minimum balance and initial balance?</string>
-    <string name="budgetLimit">Minimum Balance</string>
-    <string name="initBalance">Initial Balance</string>
+    <string name="initPrompt">Would you like to set up your budget limit and alert?</string>
+    <string name="budgetLimit">Budget Limit</string>
+    <string name="budgetAlert">Budget Alert (% of limit reached)</string>
     <string name="forgotPassword">Forgot Password?</string>
     <string name="resetPass">RESET PASSWORD</string>
-    <string name="setProfilePic">Choose Profile Pic</string>
 
     <string name="chart_title">History</string>
-    <string name="profile_image">Image</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
-    <string name="save">Save</string>
+    <string name="takePhoto">Take Photo</string>
 
 
 </resources>
