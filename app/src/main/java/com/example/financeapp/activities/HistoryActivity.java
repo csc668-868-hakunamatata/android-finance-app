@@ -80,8 +80,8 @@ public class HistoryActivity extends HomePageActivity {
 
 
     private void loadPieChartData(List<Transaction> currentTransaction) {
-        expensePieChart = findViewById(R.id.chartDeposit); //TODO need to get deposit chart
-        depositPieChart = findViewById(R.id.chartExpense); //TODO need to get deposit chart
+        expensePieChart = findViewById(R.id.chartDeposit);
+        depositPieChart = findViewById(R.id.chartExpense);
 
         ArrayList<PieEntry> tempDepositList = new ArrayList<>();
         ArrayList<PieEntry> tempExpenseList = new ArrayList<>();
@@ -153,13 +153,13 @@ public class HistoryActivity extends HomePageActivity {
         pieChartType.setCenterTextSize(12);
         pieChartType.getDescription().setEnabled(false);
 
-        //set legend for epxense
+//        //set legend for epxense
         Legend pieChartTypeLegend = pieChartType.getLegend();
-        pieChartTypeLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        pieChartTypeLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        pieChartTypeLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        pieChartTypeLegend.setDrawInside(false);
-        pieChartTypeLegend.setEnabled(true);
+//        pieChartTypeLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+//        pieChartTypeLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+//        pieChartTypeLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
+//        pieChartTypeLegend.setDrawInside(false);
+        pieChartTypeLegend.setEnabled(false);
     }
 
     private void fetchTransactionsFromFirebase() {
