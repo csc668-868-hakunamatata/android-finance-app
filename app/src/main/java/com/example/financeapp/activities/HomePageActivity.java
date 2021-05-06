@@ -41,6 +41,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -104,6 +106,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         Log.d("HomePageActivity", transaction.toString());
                     }
                 }
+
+                Collections.sort(listOfTransactions, new Comparator<Transaction>() {
+                    @Override
+                    public int compare(Transaction a1, Transaction a2) {
+                        return Long.compare(Long.parseLong(a2.date), Long.parseLong(a1.date));
+                    }
+                });
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(HomePageActivity.this, listOfTransactions);
                 recyclerView.setAdapter(adapter);
                 recyclerView.addItemDecoration(new DividerItemDecoration(HomePageActivity.this, LinearLayoutManager.VERTICAL));

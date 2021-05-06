@@ -53,6 +53,7 @@ public class NewTransactionActivity extends HomePageActivity {
     private Button submit;
     private FirebaseAuth mAuth;
     private RadioGroup radioGroup;
+    private Date date;
 
     //Image capture
     private static final int CAMERA_REQUEST = 1888;
@@ -66,6 +67,8 @@ public class NewTransactionActivity extends HomePageActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_new_transaction);
+
+        date = new Date();
         //navigation
         DrawerLayout drawerLayout;
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -153,7 +156,7 @@ public class NewTransactionActivity extends HomePageActivity {
     }
 
     private void storeTransactionToDatabase(final String clientId, final String earnedOrSpent, final String amountGiven, String sourceGiven, String descriptionGiven) {
-        Transaction transaction = new Transaction(clientId, earnedOrSpent, amountGiven, sourceGiven, descriptionGiven);
+        Transaction transaction = new Transaction(clientId, earnedOrSpent, amountGiven, sourceGiven, descriptionGiven, String.valueOf(date.getTime()));
         try {
             String transactionId = UUID.randomUUID().toString();
             DatabaseReference database = FirebaseDatabase.getInstance().getReference("Transactions/" + transactionId);
