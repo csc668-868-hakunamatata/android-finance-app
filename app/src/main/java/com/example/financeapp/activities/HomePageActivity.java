@@ -55,7 +55,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private DrawerLayout drawerLayout;
     private double budgetLimit = 0.0;
     private boolean oneTime = false;
-    private boolean alertOn = false;
+    private boolean alertOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,8 +150,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                                }
                                else if (convertedLongBalance > budgetLimit) {
                                    setBudgetAlertOneTime(false);
-                               }
-                               else {
                                }
                         }
                         Log.d("TheCurrentBalance", Objects.requireNonNull(task.getResult().getValue()).toString());
