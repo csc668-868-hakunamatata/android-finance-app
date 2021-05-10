@@ -55,6 +55,15 @@
     <string name="off">Off</string>
     <string name="save">Save</string>
     <string name="takePhoto">Take photo</string>
+    <string name="generalFaq">General FAQ</string>
+    <string name="question1">Q. Why this app?</string>
+    <string name="question2">Q. How to add an Expense?</string>
+    <string name="question3">Q. How to turn off budget alerts?</string>
+    <string name="question4">Q. Can I take receipt snapshot to update my expenses?</string>
+    <string name="answer1">- MyBudget App allows you to keep track of your expenses and savings. Moreover, we provide budget alerts when reaching a threshold amount.</string>
+    <string name="answer2">- First you need to sign up/login. Click on the New Entry button and make sure to click on Spent button at the top. Fill out all the remaining text fields and click the submit button.</string>
+    <string name="answer3">- Go to your profile. There is a button to turn off the budget alerts. Click save afterwards.</string>
+    <string name="answer4">- Yes, while filling out the expense, you can simply click on the Take Photo button and click the picture of your receipt.</string>
 
 
 </resources>

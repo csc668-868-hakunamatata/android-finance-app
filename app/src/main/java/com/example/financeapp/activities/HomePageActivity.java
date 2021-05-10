@@ -344,6 +344,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.nav_help:
+                intent = new Intent(HomePageActivity.this, HelpActivity.class);
+                startActivity(intent);
+                finish();
+                break;
 
         }
 

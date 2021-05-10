@@ -3,21 +3,23 @@
     package="com.example.financeapp">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activities.ProfileActivity"
+        <activity android:name=".activities.HelpActivity"></activity>
+        <activity
+            android:name=".activities.ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ForgotPasswordActivity" />
         <activity android:name=".activities.InitSetupActivity" />
         <activity android:name=".activities.ChartActivity" />
-        <activity android:name=".activities.HistoryActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+        <activity
+            android:name=".activities.HistoryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.NewTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -40,7 +42,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
