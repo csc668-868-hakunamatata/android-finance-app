@@ -7,6 +7,7 @@ import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -117,8 +118,11 @@ public class NewTransactionActivity extends HomePageActivity {
         }
     }
 
+ 
     private void submitTransaction() {
         String amountGiven = amount.getText().toString();
+        double decimalAmount = Double.parseDouble(amountGiven);
+        amountGiven = String.format("%.2f", decimalAmount);
         String sourceGiven = source.getText().toString();
         String descriptionGiven = description.getText().toString();
         String clientId = mAuth.getCurrentUser().getUid();
