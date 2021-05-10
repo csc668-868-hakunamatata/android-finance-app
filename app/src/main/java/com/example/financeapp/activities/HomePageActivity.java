@@ -15,6 +15,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -152,7 +153,20 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
-                        currentBalance.setText(String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+                        String returnedValue = String.valueOf(Objects.requireNonNull(task.getResult()).getValue());
+                        double decimalAmountReturned = Double.parseDouble(returnedValue);
+                        returnedValue = String.format("%.2f", decimalAmountReturned);
+                        String displayResult = "0.0";
+                        if(decimalAmountReturned<0){
+                            decimalAmountReturned = -1 * decimalAmountReturned;
+                            returnedValue = String.format("%.2f", decimalAmountReturned);
+                            displayResult = "- $ " + returnedValue;
+                            currentBalance.setTextColor(Color.RED);
+                        }else{
+                            displayResult = "$ " + returnedValue;
+                            currentBalance.setTextColor(Color.BLACK);
+                        }
+                        currentBalance.setText(displayResult);
                         if (task.getResult() != null && task.getResult().getValue() != null){
                             String stringToConvert = String.valueOf(task.getResult().getValue());
                             double convertedLongBalance = Double.parseDouble(stringToConvert);

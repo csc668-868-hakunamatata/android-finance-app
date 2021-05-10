@@ -10,7 +10,7 @@
     <string name="signout">Sign Out</string>
     <string name="noAccount">Don\'t Have Account? Signup Here</string>
     <string name="addEntry">NEW ENTRY</string>
-    <string name="currentBalance">0.00</string>
+    <string name="currentBalance">$ 0.00</string>
     <string name="amountEntry">AMOUNT</string>
     <string name="earning">Earned</string>
     <string name="spending">Spent</string>

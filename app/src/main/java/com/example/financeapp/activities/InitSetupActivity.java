@@ -50,7 +50,13 @@ public class InitSetupActivity extends AppCompatActivity {
 
     public void submitBudgetLimit(View view) {
         String budgetLimitInput = budgetLimit.getText().toString();
+        double decimalBudget = Double.parseDouble(budgetLimitInput);
+        budgetLimitInput = String.format("%.2f", decimalBudget);
+
         String initBalanceInput = initBalance.getText().toString();
+        double decimalBalance = Double.parseDouble(initBalanceInput);
+        initBalanceInput = String.format("%.2f", decimalBalance);
+
         float initBalanceNum = 0.0f;
         float budgetLimitNum = 0.0f;
         String clientId = mAuth.getCurrentUser().getUid();

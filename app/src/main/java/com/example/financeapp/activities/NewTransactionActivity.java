@@ -118,7 +118,7 @@ public class NewTransactionActivity extends HomePageActivity {
         }
     }
 
- 
+
     private void submitTransaction() {
         String amountGiven = amount.getText().toString();
         double decimalAmount = Double.parseDouble(amountGiven);
