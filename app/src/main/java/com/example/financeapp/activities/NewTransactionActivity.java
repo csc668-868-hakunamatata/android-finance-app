@@ -211,6 +211,7 @@ public class NewTransactionActivity extends HomePageActivity {
                 if(task.isSuccessful()){
                     Log.d("Firebase", "Added New Value "+ newValue + " ");
                     startActivity(new Intent(NewTransactionActivity.this, HomePageActivity.class));
+                    finish();
                 }
             }
         });

@@ -57,7 +57,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private DrawerLayout drawerLayout;
     private double budgetLimit = 0.0;
     private boolean oneTime = false;
-    private boolean alertOn;
+    private boolean alertOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         newEntry.setOnClickListener(this);
     }
+
 
     private void fetchTransactionsFromFirebase() {
         final String clientId = mAuth.getCurrentUser().getUid();
@@ -139,6 +140,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         getOneTime();
         getAlertOn();
         try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
             String clientId = mAuth.getCurrentUser().getUid();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
             ref.child("currentBalance").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -147,16 +153,18 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         currentBalance.setText(String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
-
                         if (task.getResult() != null && task.getResult().getValue() != null){
                             String stringToConvert = String.valueOf(task.getResult().getValue());
-                            Double convertedLongBalance = Double.parseDouble(stringToConvert);
-                               if (convertedLongBalance <= budgetLimit && !oneTime) {
-                                   if (alertOn) {
-                                       createBudgetAlert("Your balance went below budget minimum: " + budgetLimit);
-                                   }
-                                   setBudgetAlertOneTime(true);
-                               }
+                            double convertedLongBalance = Double.parseDouble(stringToConvert);
+                            Log.d("BudgetAlert:", String.valueOf(convertedLongBalance) + " " +  String.valueOf(budgetLimit) + " " + String.valueOf(oneTime));
+                            if (convertedLongBalance <= budgetLimit && !oneTime) {
+                                Log.d("BudgetAlert:", String.valueOf(alertOn));
+                                if (alertOn) {
+                                    Log.d("BudgetAlert:", "Budget alert fired");
+                                    createBudgetAlert("Your balance went below budget minimum: " + budgetLimit);
+                                }
+                                setBudgetAlertOneTime(true);
+                            }
                                else if (convertedLongBalance > budgetLimit) {
                                    setBudgetAlertOneTime(false);
                                }
@@ -283,10 +291,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
     private void createBudgetAlert(String messageBody) {
-        Intent intent = new Intent(this, HomePageActivity.class);
+        Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
+        PendingIntent pendingIntent = PendingIntent.getActivity(HomePageActivity.this, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(HomePageActivity.this,
                 "BudgetAlert")
                 .setSmallIcon(R.drawable.ic_alert)
                 .setContentTitle("Budget Alert!")
@@ -295,7 +303,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
         // return builder;
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(HomePageActivity.this);
         notificationManager.notify(budgetNotificationID, builder.build());
     }
     private void createNotificationChannel() {
@@ -319,18 +327,22 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case R.id.nav_financehome:
                 intent = new Intent(HomePageActivity.this, HomePageActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.nav_entry:
                 intent = new Intent(HomePageActivity.this, NewTransactionActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.nav_history:
                 intent = new Intent( HomePageActivity.this, HistoryActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.nav_profile:
                 intent = new Intent(HomePageActivity.this, ProfileActivity.class);
                 startActivity(intent);
+                finish();
                 break;
 
         }
