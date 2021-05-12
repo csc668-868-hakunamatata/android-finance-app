@@ -218,6 +218,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
     }
 
+    /*
+    @Author Ninh
+    @methods getBudgetLimit, setBudgetAlertOneTime, getAlertOn, getOneTime
+     */
     private void getBudgetLimit() {
         String clientId = mAuth.getCurrentUser().getUid();
         DatabaseReference baRef = FirebaseDatabase.getInstance().getReference("BudgetAlert/" + clientId);
@@ -304,6 +308,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    /*
+    @Author Ninh
+    @methods createBudgetAlert(), createNotificationChannel()
+     */
+
     private void createBudgetAlert(String messageBody) {
         Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
