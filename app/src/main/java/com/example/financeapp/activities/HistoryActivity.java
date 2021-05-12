@@ -35,7 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * authored by Inez Wibowo
@@ -81,7 +83,6 @@ public class HistoryActivity extends HomePageActivity {
     }
 
 
-
     private void loadPieChartData(List<Transaction> currentTransaction) {
         expensePieChart = findViewById(R.id.chartDeposit);
         depositPieChart = findViewById(R.id.chartExpense);
@@ -90,36 +91,55 @@ public class HistoryActivity extends HomePageActivity {
         ArrayList<PieEntry> tempExpenseList = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
         double totalDeposit = 0.0, totalExpense = 0.0;
-        for (int i =0; i< currentTransaction.size(); i++){
+
+        Map<String, Double> spendingMap = new HashMap<>();
+        Map<String, Double> earnedMap = new HashMap<>();
+
+        for (int i = 0; i < currentTransaction.size(); i++) {
             if (currentTransaction.get(i).earnedOrSpent.toLowerCase().equals("spent")) {
                 String s = currentTransaction.get(i).amount;
+                String sourceSpent = currentTransaction.get(i).sourceOfSpendOrEarning;
+                //parse value to make sure there aren't any duplicates spent
                 double tempDouble = Double.parseDouble(s);
+                if (spendingMap.containsKey(sourceSpent)) {
+                    double prev = spendingMap.get(sourceSpent);
+                    spendingMap.put(sourceSpent, prev + tempDouble);
+                } else {
+                    spendingMap.put(sourceSpent, tempDouble);
+                }
                 totalExpense += tempDouble;
             } else if (currentTransaction.get(i).earnedOrSpent.toLowerCase().equals("earned")) {
                 String s = currentTransaction.get(i).amount;
+                String sourceEarned = currentTransaction.get(i).sourceOfSpendOrEarning;
+                //parse value to make sure there aren't any duplicates earned
                 double tempDouble = Double.parseDouble(s);
+                if (earnedMap.containsKey(sourceEarned)) {
+                    double prev = earnedMap.get(sourceEarned);
+                    earnedMap.put(sourceEarned, prev + tempDouble);
+                } else {
+                    earnedMap.put(sourceEarned, tempDouble);
+                }
                 totalDeposit += tempDouble;
             }
         }
-        setupPieChart(expensePieChart,"Spending by category");
+        setupPieChart(expensePieChart, "Spending by category");
         setupPieChart(depositPieChart, "Deposit by category");
 
-        for (int i =0; i< currentTransaction.size(); i++){
-            if (currentTransaction.get(i).earnedOrSpent.toLowerCase().equals("spent")) {
-                String s = currentTransaction.get(i).amount;
-                float tempFloat = Float.parseFloat(s)/ ((float) totalExpense) ;
-                tempExpenseList.add(new PieEntry(tempFloat, currentTransaction.get(i).sourceOfSpendOrEarning)); //need to also add the label
-            } else if (currentTransaction.get(i).earnedOrSpent.toLowerCase().equals("earned")) {
-                String s = currentTransaction.get(i).amount;
-                float tempFloat = Float.parseFloat(s)/ ((float) totalDeposit) ;
-                tempDepositList.add(new PieEntry(tempFloat, currentTransaction.get(i).sourceOfSpendOrEarning)); //need to also add the label
-            }
+        for (String i : spendingMap.keySet()) {
+            double d = spendingMap.get(i);
+            float tempFloat = (float) d / ((float) totalExpense);
+            tempExpenseList.add(new PieEntry(tempFloat, i)); //need to also add the label
+        }
+        for (String i : earnedMap.keySet()) {
+            double d = earnedMap.get(i);
+            float tempFloat = (float) d / ((float) totalDeposit);
+            tempDepositList.add(new PieEntry(tempFloat, i)); //need to also add the label
         }
 
-        for (int color: ColorTemplate.MATERIAL_COLORS){
+        for (int color : ColorTemplate.MATERIAL_COLORS) {
             colors.add(color);
         }
-        for (int color: ColorTemplate.VORDIPLOM_COLORS){
+        for (int color : ColorTemplate.VORDIPLOM_COLORS) {
             colors.add(color);
         }
 
@@ -146,7 +166,7 @@ public class HistoryActivity extends HomePageActivity {
         depositPieChart.invalidate();
     }
 
-    private void setupPieChart(PieChart pieChartType, String label){
+    private void setupPieChart(PieChart pieChartType, String label) {
         pieChartType.setDrawHoleEnabled(true);
         pieChartType.setUsePercentValues(true);
         //set labels for expense
@@ -155,13 +175,8 @@ public class HistoryActivity extends HomePageActivity {
         pieChartType.setCenterText(label);
         pieChartType.setCenterTextSize(12);
         pieChartType.getDescription().setEnabled(false);
-
-//        //set legend for epxense
+        //set legend for expense
         Legend pieChartTypeLegend = pieChartType.getLegend();
-//        pieChartTypeLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-//        pieChartTypeLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-//        pieChartTypeLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
-//        pieChartTypeLegend.setDrawInside(false);
         pieChartTypeLegend.setEnabled(false);
     }
 
@@ -201,4 +216,5 @@ public class HistoryActivity extends HomePageActivity {
     public List<Transaction> getListOfTransactions() {
         return this.listOfTransactions;
     }
+
 }
