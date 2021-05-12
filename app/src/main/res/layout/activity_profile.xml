@@ -43,6 +43,19 @@
             android:text="John Doe"
             android:textAlignment="textStart" />
     </LinearLayout>
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:text="@string/profile_label"
+            android:textStyle="bold"
+            android:textAlignment="textStart"
+            android:layout_height="0dp" />
+    </LinearLayout>
     <RadioGroup
         android:id="@+id/RG_profile"
         android:layout_width="match_parent"

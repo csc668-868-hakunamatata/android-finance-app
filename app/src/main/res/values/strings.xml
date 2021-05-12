@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FinanceApp</string>
+    <string name="app_name">MyBudget</string>
     <string name="password">Your Password</string>
     <string name="email">Your Email</string>
     <string name="fullName">Full Name</string>
@@ -51,6 +51,7 @@
 
     <string name="chart_title">History</string>
     <string name="profile_image">Image</string>
+    <string name="profile_label">Turn minimum balance alert on/off:</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="save">Save</string>

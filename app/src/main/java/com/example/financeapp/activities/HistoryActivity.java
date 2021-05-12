@@ -37,6 +37,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * authored by Inez Wibowo
+ */
 
 public class HistoryActivity extends HomePageActivity {
     private FirebaseAuth mAuth;

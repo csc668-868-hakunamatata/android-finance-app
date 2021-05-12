@@ -65,7 +65,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_home_page);
 
-        //navigation
+
+        /**
+         * navigation authored by Inez Wibowo
+         */
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -332,6 +336,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * navigation authored by Inez Wibowo
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

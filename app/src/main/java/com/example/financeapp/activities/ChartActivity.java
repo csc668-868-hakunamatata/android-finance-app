@@ -1,12 +1,12 @@
 package com.example.financeapp.activities;
-
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.financeapp.R;
-import com.github.mikephil.charting.charts.BarChart;
+
+/**
+ * authored by Inez Wibowo
+ */
 
 
 public class ChartActivity extends AppCompatActivity {
