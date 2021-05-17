@@ -98,6 +98,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    /**
+     * Fetches the transactions from Firebase to display
+     *
+     */
     private void fetchTransactionsFromFirebase() {
         final String clientId = mAuth.getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Transactions/");
@@ -140,6 +144,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 //        }
 //    }
 
+    /**
+     * Fetches the balance from Firebase to display
+     */
     private void fetchBalanceFromFirebase() {
         getBudgetLimit();
         getOneTime();
@@ -216,6 +223,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Signs the user out through Firebase Auth
+     */
     private void signOut() {
         mAuth.signOut();
         Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);

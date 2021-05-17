@@ -83,6 +83,12 @@ public class HistoryActivity extends HomePageActivity {
     }
 
 
+    /**
+     * Loads the data from transactions into the pie charts
+     *
+     * @param  currentTransaction  List of transactions completed
+     *
+     */
     private void loadPieChartData(List<Transaction> currentTransaction) {
         expensePieChart = findViewById(R.id.chartDeposit);
         depositPieChart = findViewById(R.id.chartExpense);
@@ -166,6 +172,12 @@ public class HistoryActivity extends HomePageActivity {
         depositPieChart.invalidate();
     }
 
+    /**
+     * Initializes the type and label of the pie chart
+     *
+     * @param  pieChartType  type of pie chart being used
+     * @param  label label of the pie chart
+     */
     private void setupPieChart(PieChart pieChartType, String label) {
         pieChartType.setDrawHoleEnabled(true);
         pieChartType.setUsePercentValues(true);
@@ -180,6 +192,10 @@ public class HistoryActivity extends HomePageActivity {
         pieChartTypeLegend.setEnabled(false);
     }
 
+    /**
+     * Function makes a call to Firebase and gets the list of transactions
+     * which is passed to loadPieChartData()
+     */
     private void fetchTransactionsFromFirebase() {
         final String clientId = mAuth.getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Transactions/");
@@ -209,6 +225,11 @@ public class HistoryActivity extends HomePageActivity {
         });
     }
 
+    /**
+     * Sets the list of transactions to the current transactions
+     *
+     * @param  currentTransaction  a list of transactions
+     */
     public void setListOfTransactions(List<Transaction> currentTransaction) {
         this.listOfTransactions = currentTransaction;
     }

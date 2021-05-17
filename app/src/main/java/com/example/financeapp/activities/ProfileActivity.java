@@ -128,6 +128,11 @@ public class ProfileActivity extends HomePageActivity {
         }
     }
 
+    /**
+     * Saves the profile with any changes made
+     *
+     * @param  view  current view
+     */
     public void saveProfile(View view) {
         String budgetLimitInput = et_budgetLimit.getText().toString();
         float budgetLimitNum = 0.0f;
@@ -154,6 +159,15 @@ public class ProfileActivity extends HomePageActivity {
         }
         updateBudgetAlert(clientId, budgetLimitInput, optIn);
     }
+
+    /**
+     * Updates budget alert to be on or off
+     * as well as if a new value is set
+     *
+     * @param  clientId  id of current client
+     * @param  budgetLimit The new budget limit to be set
+     * @param  onOrOff boolean for earned or spent
+     */
     private void updateBudgetAlert(String clientId, String budgetLimit, boolean onOrOff) {
         BudgetAlert budgetAlert = new BudgetAlert(clientId, budgetLimit);
         budgetAlert.setAlertOn(onOrOff);

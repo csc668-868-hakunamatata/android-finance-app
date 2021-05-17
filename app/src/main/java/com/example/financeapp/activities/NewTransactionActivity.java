@@ -119,6 +119,10 @@ public class NewTransactionActivity extends HomePageActivity {
     }
 
 
+    /**
+     * Creates a new transaction and passes it to storeTransactionToDatabase()
+     * to be stored
+     */
     private void submitTransaction() {
         String amountGiven = amount.getText().toString();
         double decimalAmount = Double.parseDouble(amountGiven);
@@ -159,6 +163,15 @@ public class NewTransactionActivity extends HomePageActivity {
 
     }
 
+    /**
+     * Stores a new transaction in the database
+     *
+     * @param  clientId  id of current client
+     * @param  earnedOrSpent boolean for earned or spent
+     * @param  amountGiven The amount to be added or subtracted
+     * @param sourceGiven Source of transaction
+     * @param descriptionGiven description of transaction
+     */
     private void storeTransactionToDatabase(final String clientId, final String earnedOrSpent, final String amountGiven, String sourceGiven, String descriptionGiven) {
         Transaction transaction = new Transaction(clientId, earnedOrSpent, amountGiven, sourceGiven, descriptionGiven, String.valueOf(date.getTime()));
         try {
@@ -180,6 +193,13 @@ public class NewTransactionActivity extends HomePageActivity {
         }
     }
 
+    /**
+     * Gets the new balance and calls updateBalanceInDatabase
+     *
+     * @param  clientId  id of current client
+     * @param  earnedOrSpent boolean for earned or spent
+     * @param  amountGiven The amount to be added or subtracted
+     */
     private void updateCurrentBalance(final String earnedOrSpent, String clientId, final String amountGiven) {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
 
@@ -208,6 +228,12 @@ public class NewTransactionActivity extends HomePageActivity {
 
     }
 
+    /**
+     * Updates balance in the database
+     *
+     * @param  ref  Database reference
+     * @param  newValue New value to update to
+     */
     private void updateBalanceInDatabase(DatabaseReference ref, final String newValue){
         ref.child("currentBalance").setValue(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

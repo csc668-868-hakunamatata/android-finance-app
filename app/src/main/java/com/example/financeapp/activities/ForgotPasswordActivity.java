@@ -40,6 +40,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Resets the users password through Firebase Auth
+     * Sends the user an email that they use to reset the password
+     */
     private void resetPassword(){
         String userEmail = emailAddress.getText().toString().trim();
 

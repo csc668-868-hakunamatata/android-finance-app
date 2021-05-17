@@ -37,6 +37,14 @@ public class SignUpAndInRepository {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    /**
+     * SRegisters a new user with Firebase auth
+     *
+     * @param  name  user name
+     * @param  email user email
+     * @param  password user password
+     * @param image profile image
+     */
     public void register(final String name, final String email, String password,  final Uri image){
        // Log.d("receiverUrl", downloadUrl+" printed");
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -52,6 +60,12 @@ public class SignUpAndInRepository {
                 });
     }
 
+    /**
+     * Signs in user with Firebase Auth
+     *
+     * @param  email  id of current client
+     * @param  password boolean for earned or spent
+     */
     public void login(String email, String password){
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -69,6 +83,13 @@ public class SignUpAndInRepository {
         return userData;
     }
 
+    /**
+     * Selects image to Firebase and calls saveToDatabase
+     *
+     * @param  uriImage  selected image
+     * @param  name user name
+     * @param  email user email
+     */
     private void uploadImage(Uri uriImage, final String name, final String email) {
         String uuid = UUID.randomUUID().toString();
         final StorageReference ref = FirebaseStorage.getInstance().getReference("pictures/" + uuid);
@@ -92,6 +113,13 @@ public class SignUpAndInRepository {
 
     }
 
+    /**
+     * Saves image to database
+     *
+     * @param  imageUrl  url of selected image
+     * @param  name user name
+     * @param  email user email
+     */
     private void saveToDatabase(String imageUrl, String name, String email){
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final Client client = new Client(uid, name, email, "0.0", imageUrl);

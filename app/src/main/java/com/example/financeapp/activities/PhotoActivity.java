@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/*Authored by Frederick White*/
 
 public class PhotoActivity extends Activity {
     private static final int CAMERA_REQUEST = 1888;

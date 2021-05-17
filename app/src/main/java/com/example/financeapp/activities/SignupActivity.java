@@ -120,8 +120,10 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
-
+    /**
+     * Verifies new user information and calls
+     * signUpAndInViewModel.register 
+     */
     private void registerUser() {
         final String name = signupName.getText().toString();
         final String email = signupEmail.getText().toString().trim();

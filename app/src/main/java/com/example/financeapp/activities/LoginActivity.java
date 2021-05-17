@@ -86,6 +86,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * Checks for correct email and password
+     * before starting login process
+     */
     private void initiateLogin() {
         String email = userEmail.getText().toString().trim();
         String password = userPassword.getText().toString();

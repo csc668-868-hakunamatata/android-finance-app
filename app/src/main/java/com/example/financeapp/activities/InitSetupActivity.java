@@ -43,11 +43,23 @@ public class InitSetupActivity extends AppCompatActivity {
         cancel = (Button) findViewById(R.id.btn_cancel);
         mAuth = FirebaseAuth.getInstance();
     }
+
+    /**
+     * Function to turn off budget alert
+     *
+     * @param  view  current view
+     */
     public void cancelBudgetLimit(View view){
         String clientId = mAuth.getCurrentUser().getUid();
         storeBudgetAlert(clientId, "0.0", false);
     }
 
+    /**
+     * Submits the initial balance and budget by checking for them
+     * on sign up
+     *
+     * @param  view  current view
+     */
     public void submitBudgetLimit(View view) {
         String budgetLimitInput = budgetLimit.getText().toString();
         double decimalBudget = Double.parseDouble(budgetLimitInput);
@@ -82,6 +94,13 @@ public class InitSetupActivity extends AppCompatActivity {
         storeBudgetAlert(clientId, budgetLimitInput, true);
     }
 
+    /**
+     * Stores the value for the budget alert in Firebase
+     *
+     * @param  clientId  the id of the client signed in
+     * @param  budgetLimit The value for the budget
+     * @param onOrOff      boolean for if the budget alert is on or off
+     */
     private void storeBudgetAlert(String clientId, String budgetLimit, boolean onOrOff) {
         BudgetAlert budgetAlert = new BudgetAlert(clientId, budgetLimit);
         budgetAlert.setAlertOn(onOrOff);
@@ -106,6 +125,12 @@ public class InitSetupActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the current balance in firebase for a user
+     *
+     * @param  clientId  the id of the client
+     * @param  amountGiven Amount to change the balance to
+     */
     private void updateCurrentBalance(String clientId, final String amountGiven) {
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Clients/" + clientId);
 
@@ -129,6 +154,13 @@ public class InitSetupActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Updates the balance in the database
+     *
+     * @param  ref  reference to database
+     * @param  newValue value to update to
+
+     */
     private void updateBalanceInDatabase(DatabaseReference ref, final String newValue){
         //String updatedValue = String.valueOf(newValue);
         ref.child("currentBalance").setValue(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
